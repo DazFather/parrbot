@@ -20,14 +20,14 @@ func newBot(chatID int64) echotron.Bot {
 
 // Manage the incoming inputs (uptate) from Telegram
 func (b *Bot) Update(u *echotron.Update) {
-	var update = message.Update(*u)
+	var update = message.CastUpdate(u)
 
-	fn := Select(&update)
+	fn := Select(update)
 	if fn == nil {
 		return
 	}
 
-	if msg := fn(b, &update); msg != nil {
+	if msg := fn(b, update); msg != nil {
 		msg.Send(b.API, b.ChatID)
 	}
 }

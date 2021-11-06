@@ -28,7 +28,7 @@ func clearResponse(res echotron.APIResponseMessage, err error) (*UpdateMessage, 
 		return nil, ResponseError{"Telegram", res.ErrorCode, res.Description}
 	}
 
-	return cast(res.Result), nil
+	return castMessage(res.Result), nil
 }
 
 // Any single message

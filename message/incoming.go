@@ -7,8 +7,31 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
-// Just to make it looks more pretty
-type Update echotron.Update
+// Parr(b)ot Update type - it have UpdateMessage instead of echotron.Message
+type Update struct {
+	ID                 int                          `json:"update_id"`
+	Message            *UpdateMessage               `json:"parrbot_message,omitempty"`
+	EditedMessage      *UpdateMessage               `json:"parrbot_edited_message,omitempty"`
+	ChannelPost        *UpdateMessage               `json:"parrbot_channel_post,omitempty"`
+	EditedChannelPost  *UpdateMessage               `json:"parrbot_edited_channel_post,omitempty"`
+	InlineQuery        *echotron.InlineQuery        `json:"inline_query,omitempty"`
+	ChosenInlineResult *echotron.ChosenInlineResult `json:"chosen_inline_result,omitempty"`
+	CallbackQuery      *CallbackQuery               `json:"parrbot_callback_query,omitempty"`
+	MyChatMember       *echotron.ChatMemberUpdated  `json:"my_chat_member,omitempty"`
+	ChatMember         *echotron.ChatMemberUpdated  `json:"chat_member,omitempty"`
+	ChatJoinRequest    *echotron.ChatJoinRequest    `json:"chat_join_request,omitempty"`
+}
+
+// Parr(b)ot Update type - it have UpdateMessage instead of echotron.Message
+type CallbackQuery struct {
+	ID              string         `json:"id"`
+	From            *echotron.User `json:"from"`
+	Message         *UpdateMessage `json:"parrbot_message,omitempty"`
+	InlineMessageID string         `json:"inline_message_id,omitempty"`
+	ChatInstance    string         `json:"chat_instance,omitempty"`
+	Data            string         `json:"data,omitempty"`
+	GameShortName   string         `json:"game_short_name,omitempty"`
+}
 
 // Incoming update types
 type UpdateType uint16
@@ -44,7 +67,8 @@ type UpdateMessage struct {
 	AuthorSignature string                         `json:"author_signature,omitempty"`
 	InlineKeyboard  *echotron.InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	ViaBot          *echotron.User                 `json:"via_bot,omitempty"`
-	ReplyToMessage  *echotron.Message              `json:"reply_to_message,omitempty"`
+
+	ReplyToMessage *UpdateMessage `json:"parrbot_reply_to_message,omitempty"`
 
 	/* Custom wrappers of information about a specific incoming message type
 	 * tips: Thanks to that if you want to check if a message for example
@@ -114,7 +138,7 @@ type SystemNotificationInfo struct {
 	PinnedMessage                 *UpdateMessage                          `json:"parrbot_pinned_message,omitempty"`
 }
 
-func cast(original *echotron.Message) (message *UpdateMessage) {
+func castMessage(original *echotron.Message) (message *UpdateMessage) {
 	if original == nil {
 		return nil
 	}
@@ -130,6 +154,9 @@ func cast(original *echotron.Message) (message *UpdateMessage) {
 
 	message = new(UpdateMessage)
 	check(json.Unmarshal(jsonData, message))
+	if original.ReplyToMessage != nil {
+		message.ReplyToMessage = castMessage(original.ReplyToMessage)
+	}
 
 	forwardMsg := ForwardInfo{}
 	check(json.Unmarshal(jsonData, &forwardMsg))
@@ -146,7 +173,7 @@ func cast(original *echotron.Message) (message *UpdateMessage) {
 	SystemMsg := SystemNotificationInfo{}
 	check(json.Unmarshal(jsonData, &SystemMsg))
 	if original.PinnedMessage != nil {
-		SystemMsg.PinnedMessage = cast(original.PinnedMessage)
+		SystemMsg.PinnedMessage = castMessage(original.PinnedMessage)
 		message.SystemNotification = &SystemMsg
 	} else if b, _ := json.Marshal(SystemMsg); len(b) > 2 {
 		message.SystemNotification = &SystemMsg
@@ -156,6 +183,58 @@ func cast(original *echotron.Message) (message *UpdateMessage) {
 		message.Text = original.Caption
 		message.Entities = original.CaptionEntities
 	}
+
+	return
+}
+
+func castCallbackQuery(original *echotron.CallbackQuery) (callback *CallbackQuery) {
+	if original == nil {
+		return nil
+	}
+
+	check := func(e error) {
+		if e != nil {
+			log.Fatal(e)
+		}
+	}
+
+	var jsonData, err = json.Marshal(*original)
+	check(err)
+
+	callback = new(CallbackQuery)
+	check(json.Unmarshal(jsonData, callback))
+
+	if original.Message != nil {
+		callback.Message = castMessage(original.Message)
+	}
+
+	return
+}
+
+// Transform *echotron.Update into *Update
+func CastUpdate(original *echotron.Update) (update *Update) {
+	if original == nil {
+		return nil
+	}
+
+	check := func(e error) {
+		if e != nil {
+			log.Fatal(e)
+		}
+	}
+
+	var jsonData, err = json.Marshal(*original)
+	check(err)
+
+	update = new(Update)
+	check(json.Unmarshal(jsonData, update))
+
+	update.Message = castMessage(original.Message)
+	update.EditedMessage = castMessage(original.EditedMessage)
+	update.ChannelPost = castMessage(original.ChannelPost)
+	update.EditedChannelPost = castMessage(original.EditedChannelPost)
+
+	update.CallbackQuery = castCallbackQuery(original.CallbackQuery)
 
 	return
 }

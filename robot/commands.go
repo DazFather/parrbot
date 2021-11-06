@@ -43,11 +43,7 @@ func Select(update *message.Update) CommandFunc {
 
 	switch true {
 	case update.Message != nil:
-		if update.Message.Text != "" {
-			trigger = extractTrigger(update.Message.Text)
-		} else {
-			trigger = extractTrigger(update.Message.Caption)
-		}
+		trigger = extractTrigger(update.Message.Text)
 		filter = message.MESSAGE
 	case update.EditedMessage != nil:
 		trigger = extractTrigger(update.EditedMessage.Text)
