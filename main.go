@@ -22,7 +22,7 @@ var helloHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update
 	}}
 
 	var msg = message.Text{"🦜 Hello World!", nil}
-	return msg.ClipInlineKeyboard(kbd)
+	return *msg.ClipInlineKeyboard(kbd)
 }
 
 var infoHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update) message.Any {
