@@ -1,6 +1,6 @@
 # Parr(B)ot framework
 
-A just born Telegram bot framework in [Go](https://golang.org) based on top of the [echotron library](https://github.com/NicoNex/echotron).
+A just born Telegram bot framework in [Go](https://golang.org) built on top of the [echotron library](https://github.com/NicoNex/echotron).
 > You can call it Parrot, Parr-Bot, Parrot Bot, is up to you
 
 
@@ -12,7 +12,7 @@ A framework on the other hand gives you order for both files and code structure 
 > _Framework is like the nest of your project_ 🦜
 
 **Modular**: Modules helps developer to access, reuse and expand their codes and also give a sense of order to your project that will help in the long run. The base structure of Parr(b)ot is design to be easy to maintain in the future
-> _Makes together some part and build your own robo-parrot_ 🦜
+> _Put together some code and a pair of wings to build your own robo-parrot_ 🦜
 
 **Typed**: We love types! They allows you to write solid codes and if the language is (like Go) compiled you will not need to do any runtime checking of the entry values.
 That said sometimes having access to many types and constructor can be overwhelming this is the reason why the interface can be very handy to manage different data-structure that have similar behavior.
