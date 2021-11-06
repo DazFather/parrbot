@@ -11,18 +11,21 @@ import (
 type Update echotron.Update
 
 // Incoming update types
-type UpdateType uint8
+type UpdateType uint16
 
 const (
-	MESSAGE              UpdateType = 1  // 0000001
-	EDITED_MESSAGE                  = 2  // 0000010
-	CHANNEL_POST                    = 4  // 0000100
-	EDITED_CHANNEL_POST             = 8  // 0001000
-	INLINE_QUERY                    = 16 // 0010000
-	CHOSEN_INLINE_RESULT            = 32 // 0100000
-	CALLBACK_QUERY                  = 64 // 1000000
+	MESSAGE              UpdateType = 1   // 0000000001
+	EDITED_MESSAGE                  = 2   // 0000000010
+	CHANNEL_POST                    = 4   // 0000000100
+	EDITED_CHANNEL_POST             = 8   // 0000001000
+	INLINE_QUERY                    = 16  // 0000010000
+	CHOSEN_INLINE_RESULT            = 32  // 0000100000
+	CALLBACK_QUERY                  = 64  // 0001000000
+	MY_CHAT_MEMBER                  = 128 // 0010000000
+	CHAT_MEMBER                     = 256 // 0100000000
+	CHAT_JOIN_REQUEST               = 512 // 1000000000
 )
-const ANY UpdateType = 127 // 1111111
+const ANY UpdateType = 1023 // 1111111111
 
 /* Incoming or just sent message (of any type)
  * tips: Use the json naming to refer to the official Telegram documentation

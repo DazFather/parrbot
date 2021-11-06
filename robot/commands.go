@@ -58,9 +58,17 @@ func Select(update *message.Update) CommandFunc {
 	case update.EditedChannelPost != nil:
 		trigger = extractTrigger(update.EditedChannelPost.Text)
 		filter = message.EDITED_CHANNEL_POST
+	case update.InlineQuery != nil:
+		filter = message.INLINE_QUERY
 	case update.CallbackQuery != nil:
 		trigger = extractTrigger(update.CallbackQuery.Data)
 		filter = message.CALLBACK_QUERY
+	case update.MyChatMember != nil:
+		filter = message.MY_CHAT_MEMBER
+	case update.ChatMember != nil:
+		filter = message.CHAT_MEMBER
+	case update.ChatJoinRequest != nil:
+		filter = message.CHAT_JOIN_REQUEST
 	}
 
 	return commands[filter][trigger]
