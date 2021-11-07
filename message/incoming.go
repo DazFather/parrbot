@@ -55,7 +55,7 @@ const (
 	CHAT_JOIN_REQUEST                                   // 1000000000
 
 	// ANY represents any possible UpdateType.
-	ANY								= (1 << iota) - 1   // 1111111111
+	ANY                             = (1 << iota) - 1   // 1111111111
 )
 
 /* UpdateMessage is the custom type for incoming or just sent message (of any type)
