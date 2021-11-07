@@ -9,8 +9,8 @@ import (
 
 // Bot structure
 type Bot struct {
-	ChatID int64 // ChatID of the user who is using the bot on a private chat
-	echotron.API // Implements all echotron.API methods
+	ChatID       int64 // ChatID of the user who is using the bot on a private chat
+	echotron.API       // Implements all echotron.API methods
 }
 
 // Creates a new bot - will be called when a user first start the bot
@@ -32,7 +32,7 @@ func (b *Bot) Update(u *echotron.Update) {
 	}
 }
 
-// Starts give life to your amazing root parrot
+// Start give life to your amazing root parrot
 func Start(commandList []Command) {
 	// Initialization
 	LoadToken()

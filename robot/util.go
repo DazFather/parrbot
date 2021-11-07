@@ -1,57 +1,15 @@
 package robot
 
 import (
-	"errors"
-	"github.com/NicoNex/echotron/v3"
-	"os"
 	"regexp"
 	"strings"
+
+	"Parrbot/message"
+
+	"github.com/NicoNex/echotron/v3"
 )
 
-// It try to detect if a string is a vaild token
-func validateToken(token string) error {
-	match, err := regexp.MatchString(`\d+:[\w\-]+`, token)
-	if err != nil {
-		return err
-	}
-	if !match {
-		return errors.New("Wrong format for TOKEN value")
-	}
-
-	return nil
-}
-
-/* Grab the token from using the command line arguments (os.Args)
- * put the token next to the executable file name on the console or
- * use put readfrom followed by the file in witch there is the token (ex. .\DuelBot.exe readfrom mytoken.txt)
- */
-func GrabToken() (token string, err error) {
-	switch len(os.Args) {
-	case 1:
-		return "", errors.New("Missing TOKEN value")
-
-	case 2:
-		token = os.Args[1]
-
-	case 3:
-		if strings.ToUpper(os.Args[1]) != "--READFROM" {
-			return "", errors.New("Invalid format")
-		}
-		if content, err := os.ReadFile(os.Args[2]); err != nil {
-			return "", err
-		} else {
-			token = strings.TrimSpace(string(content))
-		}
-
-	default:
-		return "", errors.New("Too many arguments")
-	}
-
-	err = validateToken(token)
-	return
-}
-
-// Returns the text contained in the given update.
+// extractText returns the text contained in the given update.
 func extractText(update *echotron.Update) string {
 	switch true {
 	case update.Message != nil:
@@ -72,7 +30,7 @@ func extractText(update *echotron.Update) string {
 	return ""
 }
 
-// Get the Message.ID of an update (that is not inline-based)
+// extractChatID get the Message.ID of an update (that is not inline-based)
 func extractChatID(update *echotron.Update) int64 {
 	switch true {
 	case update.Message != nil:
@@ -88,7 +46,7 @@ func extractChatID(update *echotron.Update) int64 {
 	return -1
 }
 
-// Get the Message.ID of an update (that is not inline-based)
+// extractMessageID get the Message.ID of an update (that is not inline-based)
 func extractMessageID(update *echotron.Update) int {
 	switch true {
 	case update.Message != nil:
@@ -106,7 +64,7 @@ func extractMessageID(update *echotron.Update) int {
 	return -1
 }
 
-// Generate and return the MessageIDOptions of a given update using the ID and SenderChat
+// extractMessageIDOpt generate and return the MessageIDOptions of a given update using the ID and SenderChat
 func extractMessageIDOpt(update *echotron.Update) *echotron.MessageIDOptions {
 	var (
 		message *echotron.Message
@@ -149,7 +107,7 @@ func extractMessageIDOpt(update *echotron.Update) *echotron.MessageIDOptions {
 	return &msgID
 }
 
-// Return the /command and the payload (other element separated by ' ' or '_' if /start)
+// extractCommand return the /command and the payload (other element separated by ' ' or '_' if /start)
 func extractCommand(update *echotron.Update) (command string, payload []string) {
 	var (
 		text = extractText(update)
@@ -170,7 +128,7 @@ func extractCommand(update *echotron.Update) (command string, payload []string) 
 	return
 }
 
-// Return the parsed FirstName of the user who sent the message
+// extractName return the parsed FirstName of the user who sent the message
 func extractName(update *echotron.Update) (FirstName string) {
 	var user *echotron.User
 
@@ -202,9 +160,16 @@ func extractName(update *echotron.Update) (FirstName string) {
 	return
 }
 
-// Put the escaping sequence on name
+// parseName put the escaping sequence on name
 func parseName(rawName string) string {
 	var rx = regexp.MustCompile(`[\*\[\]\(\)\` + "`" + `~>#+\-=|{}.!]`)
 
 	return rx.ReplaceAllString(rawName, "\\$0")
+}
+
+// Sender creates a CommandFunc that only returns the given message
+func Sender(msg message.Any) CommandFunc {
+	return func(bot *Bot, update *message.Update) message.Any {
+		return msg
+	}
 }

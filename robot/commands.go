@@ -1,28 +1,32 @@
 package robot
 
 import (
-	"math"
 	"regexp"
 
 	"Parrbot/message"
 )
 
-type CommandFunc func(*Bot, *message.Update) message.Any
-
+// Command is a bot's command declaration that compose the command list
 type Command struct {
-	Name, Trigger string
-	ReplyAt       message.UpdateType
-	Scope         CommandFunc
+	Name    string             // The name of the command
+	Trigger string             // Needs to start with the '/' character. Is the string that if contained at the start of the update would run the Scope
+	ReplyAt message.UpdateType // Tells witch UpdateType(s) the bot will reply at, sum them to put more
+	Scope   CommandFunc        // The actual function that the bot will run
 }
 
+// CommandFunc is a custom type that rapresent a command that the bot should be able to run
+type CommandFunc func(*Bot, *message.Update) message.Any
+
+// commands is where all the command will be stored
 var commands map[message.UpdateType]map[string]CommandFunc
 
+// Divider divide the command list and cast it in a form that is more efficenct
 func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]CommandFunc) {
 	splitted = make(map[message.UpdateType]map[string]CommandFunc, 0)
 
 	for _, cmd := range commandList {
-		for i := 0.0; i <= 6; i++ {
-			t := message.UpdateType(math.Pow(2, i))
+		for i := 0; i <= 9; i++ {
+			t := message.UpdateType(1 << i)
 			if cmd.ReplyAt&t != 0 {
 				if m := splitted[t]; m == nil {
 					splitted[t] = make(map[string]CommandFunc, 0)
@@ -35,6 +39,7 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 	return
 }
 
+// Select take an update and verify it's type and then trigger in order to return the appropriate function (or nil)
 func Select(update *message.Update) CommandFunc {
 	var (
 		trigger string
@@ -70,11 +75,13 @@ func Select(update *message.Update) CommandFunc {
 	return commands[filter][trigger]
 }
 
+// extractTrigger is in charge of extracting the trigger from a caption originated by the update
 func extractTrigger(caption string) string {
 	var rgxp = regexp.MustCompile(`^/\w+`)
 	return rgxp.FindString(caption)
 }
 
+// LoadCommands saves the given commandList in a form that is more efficenct
 func LoadCommands(commandList []Command) {
 	commands = make(map[message.UpdateType]map[string]CommandFunc, 0)
 	commands = Divider(commandList)
