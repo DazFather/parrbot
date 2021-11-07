@@ -9,16 +9,16 @@ import (
 
 // Bot structure
 type Bot struct {
-	ChatID int64
-	echotron.API
+	ChatID int64 // ChatID of the user who is using the bot on a private chat
+	echotron.API // Implements all echotron.API methods
 }
 
-// Create a new bot
+// Creates a new bot - will be called when a user first start the bot
 func newBot(chatID int64) echotron.Bot {
 	return &Bot{chatID, echotron.NewAPI(TOKEN)}
 }
 
-// Manage the incoming inputs (uptate) from Telegram
+// Update is used to manage the incoming inputs from Telegram
 func (b *Bot) Update(u *echotron.Update) {
 	var update = message.CastUpdate(u)
 
@@ -32,10 +32,13 @@ func (b *Bot) Update(u *echotron.Update) {
 	}
 }
 
+// Starts give life to your amazing root parrot
 func Start(commandList []Command) {
+	// Initialization
 	LoadToken()
 	LoadCommands(commandList)
 
+	// Put life into the bot
 	dsp := echotron.NewDispatcher(TOKEN, newBot)
 	log.Println(dsp.Poll())
 }

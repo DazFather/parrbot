@@ -11,7 +11,7 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
-/* A menu is a collection of message that can be seen by pressing the related
+/* Menu is a collection of message that can be seen by pressing the related
  * button. The menu can be triggered by both a message and a CallbackData.
  */
 type Menu struct {
@@ -26,10 +26,10 @@ type Menu struct {
 	NextCaption, PreviousCaption, CloseCaption string
 }
 
-// A page of the menu is a function that will return the content that will be shown
+// MenuPage is a function that will return the content that will be shown when a user request that page of the Menu
 type MenuPage func(b *robot.Bot) (content string, opts *echotron.MessageTextOptions)
 
-// Implements a menu to work with a specific trigger (you can direclt add to the command list)
+// UseMenu implements a Menu to work with a specific trigger (you can direclt add the return to the command list)
 func (m *Menu) UseMenu(trigger string) robot.Command {
 	// Set default captions values
 	if m.NextCaption == "" {
@@ -82,7 +82,7 @@ func (m *Menu) UseMenu(trigger string) robot.Command {
 	}
 }
 
-// Select and use a page of the menu
+// SelectPage select and call the return of a specific page of the Menu
 func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *message.Update) message.Any {
 	var content, opt = m.Pages[pageNumber](b)
 	if opt == nil {
@@ -109,7 +109,7 @@ func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *messag
 
 }
 
-// Return the previous / close / next buttons row
+// genButtons returns the navigation buttons row (previous / close / next)
 func (m Menu) genButtons(trigger string, pageNumber int) (btnRow []echotron.InlineKeyboardButton) {
 	// Previous Button
 	if pageNumber > 0 {
@@ -135,7 +135,7 @@ func (m Menu) genButtons(trigger string, pageNumber int) (btnRow []echotron.Inli
 	return
 }
 
-// Create a page of a menu that will return always the same output
+// StaticPage returns a MenuPage that will return always the same output
 func StaticPage(content string, opt *echotron.MessageTextOptions) MenuPage {
 	return func(*robot.Bot) (string, *echotron.MessageTextOptions) {
 		return content, opt
