@@ -18,10 +18,9 @@ func (err ResponseError) Error() string {
 	return fmt.Sprint("[", err.ErrorCode, "] ", err.From, ": ", err.Description)
 }
 
-/* clearResponse it clears the echotron.APIResponseMessage and returns the actual
- * message of type *UpdateMessage (casting it from Result),
- * and an error by checking both, the APIResponseBase and the echotron err
- */
+// clearResponse it clears the echotron.APIResponseMessage and returns the actual
+// message of type *UpdateMessage (casting it from Result),
+// and an error by checking both, the APIResponseBase and the echotron err
 func clearResponse(res echotron.APIResponseMessage, err error) (*UpdateMessage, error) {
 	if err != nil {
 		return nil, ResponseError{"Echotron", 1, err.Error()}
@@ -32,8 +31,9 @@ func clearResponse(res echotron.APIResponseMessage, err error) (*UpdateMessage, 
 	return castMessage(res.Result), nil
 }
 
-// Any single message type
+// Any rapresent any single message type with the exeption of MediaGroup
 type Any interface {
+	// Send the message to the specified user and return a pointer to the messa sent and an error
 	Send(api echotron.API, chatID int64) (*UpdateMessage, error)
 }
 
@@ -43,18 +43,22 @@ type Animation struct {
 	Opts *echotron.AnimationOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Animation) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendAnimation(message.File, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Animation) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Animation {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Animation) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Animation {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Animation) ForceReply(placeholder string, selective bool) *Animation {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -63,6 +67,7 @@ func (message *Animation) ForceReply(placeholder string, selective bool) *Animat
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Animation) editMarkup(value echotron.ReplyMarkup) *Animation {
 	if message.Opts == nil {
 		message.Opts = new(echotron.AnimationOptions)
@@ -78,18 +83,22 @@ type Audio struct {
 	Opts *echotron.AudioOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Audio) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendAudio(message.File, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Audio) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Audio {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Audio) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Audio {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Audio) ForceReply(placeholder string, selective bool) *Audio {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -98,6 +107,7 @@ func (message *Audio) ForceReply(placeholder string, selective bool) *Audio {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Audio) editMarkup(value echotron.ReplyMarkup) *Audio {
 	if message.Opts == nil {
 		message.Opts = new(echotron.AudioOptions)
@@ -113,18 +123,22 @@ type Contact struct {
 	Opts                   *echotron.ContactOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Contact) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendContact(message.PhoneNumber, message.FirstName, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Contact) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Contact {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Contact) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Contact {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Contact) ForceReply(placeholder string, selective bool) *Contact {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -133,6 +147,7 @@ func (message *Contact) ForceReply(placeholder string, selective bool) *Contact 
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Contact) editMarkup(value echotron.ReplyMarkup) *Contact {
 	if message.Opts == nil {
 		message.Opts = new(echotron.ContactOptions)
@@ -148,18 +163,22 @@ type Dice struct {
 	Opts  *echotron.BaseOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Dice) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendDice(chatID, message.Emoji, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Dice) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Dice {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Dice) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Dice {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Dice) ForceReply(placeholder string, selective bool) *Dice {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -168,6 +187,7 @@ func (message *Dice) ForceReply(placeholder string, selective bool) *Dice {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Dice) editMarkup(value echotron.ReplyMarkup) *Dice {
 	if message.Opts == nil {
 		message.Opts = new(echotron.BaseOptions)
@@ -183,18 +203,22 @@ type Document struct {
 	Opts *echotron.DocumentOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Document) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendDocument(message.File, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Document) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Document {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Document) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Document {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Document) ForceReply(placeholder string, selective bool) *Document {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -203,6 +227,7 @@ func (message *Document) ForceReply(placeholder string, selective bool) *Documen
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Document) editMarkup(value echotron.ReplyMarkup) *Document {
 	if message.Opts == nil {
 		message.Opts = new(echotron.DocumentOptions)
@@ -218,18 +243,22 @@ type Game struct {
 	Opts          *echotron.BaseOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Game) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendGame(message.GameShortName, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Game) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Game {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Game) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Game {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Game) ForceReply(placeholder string, selective bool) *Game {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -238,6 +267,7 @@ func (message *Game) ForceReply(placeholder string, selective bool) *Game {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Game) editMarkup(value echotron.ReplyMarkup) *Game {
 	if message.Opts == nil {
 		message.Opts = new(echotron.BaseOptions)
@@ -253,18 +283,22 @@ type Location struct {
 	Opts                *echotron.LocationOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Location) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendLocation(chatID, message.Latitude, message.Longitude, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Location) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Location {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Location) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Location {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Location) ForceReply(placeholder string, selective bool) *Location {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -273,6 +307,7 @@ func (message *Location) ForceReply(placeholder string, selective bool) *Locatio
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Location) editMarkup(value echotron.ReplyMarkup) *Location {
 	if message.Opts == nil {
 		message.Opts = new(echotron.LocationOptions)
@@ -288,18 +323,22 @@ type Text struct {
 	Opts *echotron.MessageOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Text) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendMessage(message.Text, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Text) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Text {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Text) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Text {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Text) ForceReply(placeholder string, selective bool) *Text {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -308,6 +347,7 @@ func (message *Text) ForceReply(placeholder string, selective bool) *Text {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Text) editMarkup(value echotron.ReplyMarkup) *Text {
 	if message.Opts == nil {
 		message.Opts = new(echotron.MessageOptions)
@@ -323,18 +363,22 @@ type Photo struct {
 	Opts *echotron.PhotoOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Photo) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendPhoto(message.File, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Photo) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Photo {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Photo) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Photo {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Photo) ForceReply(placeholder string, selective bool) *Photo {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -343,6 +387,7 @@ func (message *Photo) ForceReply(placeholder string, selective bool) *Photo {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Photo) editMarkup(value echotron.ReplyMarkup) *Photo {
 	if message.Opts == nil {
 		message.Opts = new(echotron.PhotoOptions)
@@ -359,18 +404,22 @@ type Poll struct {
 	Opts     *echotron.PollOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Poll) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendPoll(chatID, message.Question, message.Options, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Poll) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Poll {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Poll) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Poll {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Poll) ForceReply(placeholder string, selective bool) *Poll {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -379,6 +428,7 @@ func (message *Poll) ForceReply(placeholder string, selective bool) *Poll {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Poll) editMarkup(value echotron.ReplyMarkup) *Poll {
 	if message.Opts == nil {
 		message.Opts = new(echotron.PollOptions)
@@ -394,18 +444,22 @@ type Sticker struct {
 	Opts      *echotron.BaseOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Sticker) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendSticker(message.StickerID, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Sticker) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Sticker {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Sticker) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Sticker {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Sticker) ForceReply(placeholder string, selective bool) *Sticker {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -414,6 +468,7 @@ func (message *Sticker) ForceReply(placeholder string, selective bool) *Sticker 
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Sticker) editMarkup(value echotron.ReplyMarkup) *Sticker {
 	if message.Opts == nil {
 		message.Opts = new(echotron.BaseOptions)
@@ -430,18 +485,22 @@ type Venue struct {
 	Opts                *echotron.VenueOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Venue) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendVenue(chatID, message.Latitude, message.Longitude, message.Title, message.Address, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Venue) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Venue {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Venue) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Venue {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Venue) ForceReply(placeholder string, selective bool) *Venue {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -450,6 +509,7 @@ func (message *Venue) ForceReply(placeholder string, selective bool) *Venue {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Venue) editMarkup(value echotron.ReplyMarkup) *Venue {
 	if message.Opts == nil {
 		message.Opts = new(echotron.VenueOptions)
@@ -465,18 +525,22 @@ type Video struct {
 	Opts *echotron.VideoOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Video) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendVideo(message.File, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Video) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Video {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Video) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Video {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Video) ForceReply(placeholder string, selective bool) *Video {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -485,6 +549,7 @@ func (message *Video) ForceReply(placeholder string, selective bool) *Video {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Video) editMarkup(value echotron.ReplyMarkup) *Video {
 	if message.Opts == nil {
 		message.Opts = new(echotron.VideoOptions)
@@ -500,18 +565,22 @@ type VideoNote struct {
 	Opts *echotron.VideoNoteOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message VideoNote) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendVideoNote(message.File, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *VideoNote) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *VideoNote {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *VideoNote) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *VideoNote {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *VideoNote) ForceReply(placeholder string, selective bool) *VideoNote {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -520,6 +589,7 @@ func (message *VideoNote) ForceReply(placeholder string, selective bool) *VideoN
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *VideoNote) editMarkup(value echotron.ReplyMarkup) *VideoNote {
 	if message.Opts == nil {
 		message.Opts = new(echotron.VideoNoteOptions)
@@ -535,18 +605,22 @@ type Voice struct {
 	Opts *echotron.VoiceOptions
 }
 
+// Send the message to the specified user (by this method the stuct can be used a Any interface)
 func (message Voice) Send(api echotron.API, chatID int64) (res *UpdateMessage, err error) {
 	return clearResponse(api.SendVoice(message.File, chatID, message.Opts))
 }
 
+// ClipKeyboard allows to quickly add or change the Opts.ReplyMarkup of the current message
 func (message *Voice) ClipKeyboard(kbd echotron.ReplyKeyboardMarkup) *Voice {
 	return message.editMarkup(kbd)
 }
 
+// ClipInlineKeyboard allows to quickly add or change an inline keyboard to the message Opts
 func (message *Voice) ClipInlineKeyboard(kbd [][]echotron.InlineKeyboardButton) *Voice {
 	return message.editMarkup(echotron.InlineKeyboardMarkup{InlineKeyboard: kbd})
 }
 
+// ForceReply allows to quickly force the user to reply to the current message when sent
 func (message *Voice) ForceReply(placeholder string, selective bool) *Voice {
 	return message.editMarkup(echotron.ForceReply{
 		ForceReply:            true,
@@ -555,6 +629,7 @@ func (message *Voice) ForceReply(placeholder string, selective bool) *Voice {
 	})
 }
 
+// editMarkup is a helper method to change or add a ReplyMarkup on the message Opts
 func (message *Voice) editMarkup(value echotron.ReplyMarkup) *Voice {
 	if message.Opts == nil {
 		message.Opts = new(echotron.VoiceOptions)
@@ -564,7 +639,9 @@ func (message *Voice) editMarkup(value echotron.ReplyMarkup) *Voice {
 	return message
 }
 
-// -----------------------------------------------------
+/* -----------------------------------------------------
+   NOT YET IMPLEMENTED
+   -----------------------------------------------------
 type ChatAction struct {
 	Action echotron.ChatAction
 } // APIResponseBool
@@ -573,3 +650,4 @@ type MediaGroup struct {
 	Media []echotron.GroupableInputMedia
 	Opts  *echotron.MediaGroupOptions
 } // APIResponseArray
+*/

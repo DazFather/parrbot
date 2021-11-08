@@ -20,11 +20,10 @@ func LoadToken() {
 	}
 }
 
-/* GrabToken grab the token from using the command line arguments (os.Args)
- * put the token next to the executable file name on the console or
- * use put readfrom followed by the file in witch there is the token as example:
- * .\DuelBot.exe --readfrom mytoken.txt
- */
+// GrabToken grab the token from using the command line arguments (os.Args)
+// put the token next to the executable file name on the console or
+// use put readfrom followed by the file in witch there is the token as example:
+// .\DuelBot.exe --readfrom mytoken.txt
 func GrabToken() (token string, err error) {
 	switch len(os.Args) {
 	case 1:

@@ -7,10 +7,9 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
-/* Update is the Parr(b)ot rapresentation the echotron.Update, the difference
- * is that it have the custom UpdateMessage instead of echotron.Message type.
- * You can cast a echotron.Update to a Update using the CastUpdate function
- */
+// Update is the Parr(b)ot rapresentation the echotron.Update, the difference
+// is that it have the custom UpdateMessage instead of echotron.Message type.
+// You can cast a echotron.Update to a Update using the CastUpdate function
 type Update struct {
 	ID                 int                          `json:"update_id"`
 	Message            *UpdateMessage               `json:"parrbot_message,omitempty"`
@@ -25,9 +24,8 @@ type Update struct {
 	ChatJoinRequest    *echotron.ChatJoinRequest    `json:"chat_join_request,omitempty"`
 }
 
-/* CallbackQuery is the Parr(b)ot rapresentation the echotron.CallbackQuery,
- * the difference is that it have the custom UpdateMessage instead of echotron.Message type
- */
+// CallbackQuery is the Parr(b)ot rapresentation the echotron.CallbackQuery,
+// the difference is that it have the custom UpdateMessage instead of echotron.Message type
 type CallbackQuery struct {
 	ID              string         `json:"id"`
 	From            *echotron.User `json:"from"`
@@ -41,35 +39,33 @@ type CallbackQuery struct {
 // UpdateType represent a possible incoming Update types used on the "ReplyAt" Command inside the command list
 type UpdateType uint16
 
-/* These are all the possible types of Update. On the side the binary representation
- * Each one can be used as a flag into the "ReplyAt" field of a Command on the
- * command list
- * tips: You can even sum them to specify that the command will be executed on
- *       reply at for example MESSAGE + CHANNEL_POST (normal written messages)
- *       and channel posts. If you want all, you can use ANY
- */
+// These are all the possible types of Update. On the side the binary representation
+// Each one can be used as a flag into the "ReplyAt" field of a Command on the
+// command list
+// tips: You can even sum them to specify that the command will be executed on
+//       reply at for example MESSAGE + CHANNEL_POST (normal written messages)
+//       and channel posts. If you want all, you can use ANY
 const (
-	MESSAGE              UpdateType = 1 << iota         // 0000000001
-	EDITED_MESSAGE                                      // 0000000010
-	CHANNEL_POST                                        // 0000000100
-	EDITED_CHANNEL_POST                                 // 0000001000
-	INLINE_QUERY                                        // 0000010000
-	CHOSEN_INLINE_RESULT                                // 0000100000
-	CALLBACK_QUERY                                      // 0001000000
-	MY_CHAT_MEMBER                                      // 0010000000
-	CHAT_MEMBER                                         // 0100000000
-	CHAT_JOIN_REQUEST                                   // 1000000000
+	MESSAGE              UpdateType = 1 << iota // 0000000001
+	EDITED_MESSAGE                              // 0000000010
+	CHANNEL_POST                                // 0000000100
+	EDITED_CHANNEL_POST                         // 0000001000
+	INLINE_QUERY                                // 0000010000
+	CHOSEN_INLINE_RESULT                        // 0000100000
+	CALLBACK_QUERY                              // 0001000000
+	MY_CHAT_MEMBER                              // 0010000000
+	CHAT_MEMBER                                 // 0100000000
+	CHAT_JOIN_REQUEST                           // 1000000000
 
 	// ANY represents any possible UpdateType.
-	ANY                             = (1 << iota) - 1   // 1111111111
+	ANY = (1 << iota) - 1 // 1111111111
 )
 
-/* UpdateMessage is the custom type for incoming or just sent message (of any type)
- * tips: Use the json naming to refer to the official Telegram documentation
- *       available at: https://core.telegram.org/bots/api#message
- *       In the rare cases where the json string start with "parrbot_" then
- *       is not a copy-paste of the response
- */
+// UpdateMessage is the custom type for incoming or just sent message (of any type)
+// tips: Use the json naming to refer to the official Telegram documentation
+//       available at: https://core.telegram.org/bots/api#message
+//       In the rare cases where the json string start with "parrbot_" then
+//       is not a copy-paste of the response
 type UpdateMessage struct {
 	// Normal Telegram / Echotron resonse
 	ID              int                            `json:"message_id"`
@@ -86,7 +82,7 @@ type UpdateMessage struct {
 
 	/* Custom wrappers of information about a specific incoming message type
 	 * tips: Thanks to that if you want to check if a message for example
-	 *       countains a media you can just check if message.Media != nil
+	 *       contains a media you can just check if message.Media != nil
 	 */
 	Forward            *ForwardInfo            `json:"parrbot_forward,omitempty"`
 	Media              *MediaInfo              `json:"parrbot_media,omitempty"`
@@ -183,7 +179,7 @@ func castMessage(original *echotron.Message) (message *UpdateMessage) {
 		message.Forward = &forwardMsg
 	}
 
-	// ... values if the message countains media or special attachments
+	// ... values if the message contains media or special attachments
 	mediaMsg := MediaInfo{}
 	check(json.Unmarshal(jsonData, &mediaMsg))
 	if b, _ := json.Marshal(mediaMsg); len(b) > 2 {

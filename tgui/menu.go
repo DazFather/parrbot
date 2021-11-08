@@ -11,18 +11,16 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
-/* Menu is a collection of message that can be seen by pressing the related
- * button. The menu can be triggered by both a message and a CallbackData.
- */
+// Menu is a collection of message that can be seen by pressing the related
+// button. The menu can be triggered by both a message and a CallbackData.
 type Menu struct {
 	// The collection of pages of the menu, required to work
 	Pages []MenuPage
 
-	/* The caption of the navigation buttons. You can embed "[INDEX]" inside
-	 * PreviousCaption and NextCaption to show the number of the related page.
-	 * By default (if missing or empty string are passed) their values is:
-	 * "Next ⏭ [INDEX]", "[INDEX] ⏮ Prev.", "❌ Close".
-	 */
+	// The caption of the navigation buttons. You can embed "[INDEX]" inside
+	// PreviousCaption and NextCaption to show the number of the related page.
+	// By default (if missing or empty string are passed) their values is:
+	// "Next ⏭ [INDEX]", "[INDEX] ⏮ Prev.", "❌ Close".
 	NextCaption, PreviousCaption, CloseCaption string
 }
 

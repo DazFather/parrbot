@@ -1,5 +1,8 @@
 # Parr(B)ot framework
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/DazFather/Parrbot)](https://goreportcard.com/report/github.com/DazFather/Parrbot)
+
+
 A just born Telegram bot framework in [Go](https://golang.org) built on top of the [echotron library](https://github.com/NicoNex/echotron).
 > You can call it Parrot, Parr-Bot, Parrot Bot, is up to you
 
