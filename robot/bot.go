@@ -3,7 +3,8 @@ package robot
 import (
 	"log"
 
-	"Parrbot/message"
+	"parrbot/message"
+
 	"github.com/NicoNex/echotron/v3"
 )
 

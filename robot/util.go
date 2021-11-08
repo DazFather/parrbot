@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"Parrbot/message"
+	"parrbot/message"
 
 	"github.com/NicoNex/echotron/v3"
 )

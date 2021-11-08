@@ -1,4 +1,4 @@
-module Parrbot
+module parrbot
 
 go 1.17
 

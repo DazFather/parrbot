@@ -1,8 +1,8 @@
 package main
 
 import (
-	"Parrbot/message"
-	"Parrbot/robot"
+	"parrbot/message"
+	"parrbot/robot"
 
 	"github.com/NicoNex/echotron/v3"
 )

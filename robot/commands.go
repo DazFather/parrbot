@@ -3,7 +3,7 @@ package robot
 import (
 	"regexp"
 
-	"Parrbot/message"
+	"parrbot/message"
 )
 
 // Command is a bot's command declaration that compose the command list

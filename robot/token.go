@@ -36,11 +36,11 @@ func GrabToken() (token string, err error) {
 		if strings.ToUpper(os.Args[1]) != "--READFROM" {
 			return "", errors.New("Invalid format")
 		}
-		if content, err := os.ReadFile(os.Args[2]); err != nil {
+		content, err := os.ReadFile(os.Args[2])
+		if err != nil {
 			return "", err
-		} else {
-			token = strings.TrimSpace(string(content))
 		}
+		token = strings.TrimSpace(string(content))
 
 	default:
 		return "", errors.New("Too many arguments")
