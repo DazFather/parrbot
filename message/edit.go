@@ -1,6 +1,8 @@
 package message
 
 import (
+	"errors"
+
 	"github.com/NicoNex/echotron/v3"
 )
 
@@ -8,6 +10,9 @@ import (
 // ONLY for messages sent by the bot that contain media (like Photo or Document...)
 func (message *UpdateMessage) EditCaption(a echotron.API, opts *echotron.MessageCaptionOptions) (err error) {
 	// Extracting the MessageIDOptions
+	if message == nil || message.Chat == nil {
+		return errors.New("Invalid message")
+	}
 	msgIDOpt := echotron.NewMessageID(message.Chat.ID, message.ID)
 
 	// Perform the edit and clearig the response
@@ -38,6 +43,9 @@ func (message *UpdateMessage) EditCaption(a echotron.API, opts *echotron.Message
 // ONLY for messages sent by the bot that contain it (like Photo or Document...)
 func (message *UpdateMessage) EditLiveLocation(a echotron.API, latitude, longitude float64, opts *echotron.EditLocationOptions) (err error) {
 	// Extracting the MessageIDOptions
+	if message == nil || message.Chat == nil {
+		return errors.New("Invalid message")
+	}
 	msgIDOpt := echotron.NewMessageID(message.Chat.ID, message.ID)
 
 	// Perform the edit and clearig the response
@@ -62,6 +70,9 @@ func (message *UpdateMessage) EditLiveLocation(a echotron.API, latitude, longitu
 // ONLY for messages sent by the bot that contain it
 func (message *UpdateMessage) EditMedia(a echotron.API, media echotron.InputMedia, keyboard [][]echotron.InlineKeyboardButton) (err error) {
 	// Extracting the MessageIDOptions
+	if message == nil || message.Chat == nil {
+		return errors.New("Invalid message")
+	}
 	msgIDOpt := echotron.NewMessageID(message.Chat.ID, message.ID)
 
 	// Perform the edit and clearig the response
@@ -89,6 +100,9 @@ func (message *UpdateMessage) EditMedia(a echotron.API, media echotron.InputMedi
 // for messages sent by the bot
 func (message *UpdateMessage) EditInlineKeyboard(a echotron.API, keyboard [][]echotron.InlineKeyboardButton) (err error) {
 	// Extracting the MessageIDOptions
+	if message == nil || message.Chat == nil {
+		return errors.New("Invalid message")
+	}
 	msgIDOpt := echotron.NewMessageID(message.Chat.ID, message.ID)
 
 	// Perform the edit and clearig the response
@@ -115,6 +129,9 @@ func (message *UpdateMessage) EditInlineKeyboard(a echotron.API, keyboard [][]ec
 // for textual messages (message.Text) sent by the bot
 func (message *UpdateMessage) EditText(a echotron.API, text string, opts *echotron.MessageTextOptions) (err error) {
 	// Extracting the MessageIDOptions
+	if message == nil || message.Chat == nil {
+		return errors.New("Invalid message")
+	}
 	msgIDOpt := echotron.NewMessageID(message.Chat.ID, message.ID)
 
 	// Perform the edit and clearig the response

@@ -19,10 +19,11 @@ func Log(api echotron.API, chatID int64, any ...interface{}) {
 
 	// Parsing each data and add the result to the message text
 	for i, value := range any {
+		t := fmt.Sprint("\n<b>Data (", i, "):</b>\nString: <code>", any[i], "</code>")
 		if data, e := json.MarshalIndent(value, "", "   "); e == nil {
-			message.Text += fmt.Sprint("\nData (", i, "):\n<code>", string(data), "</code>")
+			message.Text += fmt.Sprint(t, "\nJSON:\n<code>", string(data), "</code>\n")
 		} else {
-			message.Text += fmt.Sprint("\nData (", i, "): <code>Impossible to parse</code>")
+			message.Text += fmt.Sprint(t, "\n<code>[Impossible to parse JSON]</code>\n")
 		}
 	}
 

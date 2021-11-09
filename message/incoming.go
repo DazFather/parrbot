@@ -75,7 +75,7 @@ type UpdateMessage struct {
 	SenderChat      *echotron.Chat                 `json:"sender_chat,omitempty"`
 	EditDate        int                            `json:"edit_date,omitempty"`
 	AuthorSignature string                         `json:"author_signature,omitempty"`
-	InlineKeyboard  *echotron.InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InlineKeyboard  *echotron.InlineKeyboardMarkup `json:"reply_markup,omitempty"` // it Changed the name: ReplyMarkup (too generic) -> InlineKeyboard
 	ViaBot          *echotron.User                 `json:"via_bot,omitempty"`
 
 	ReplyToMessage *UpdateMessage `json:"parrbot_reply_to_message,omitempty"`
