@@ -42,11 +42,13 @@ func (m *Menu) UseMenu(trigger string) robot.Command {
 
 	// Create the handler function
 	var menuHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update) message.Any {
+		var api = message.GetAPI()
+
 		// Get the payload
 		var text string
 		if update.Message != nil {
 			text = update.Message.Text
-			bot.DeleteMessage(update.Message.From.ID, update.Message.ID)
+			api.DeleteMessage(update.Message.From.ID, update.Message.ID)
 		} else {
 			text = update.CallbackQuery.Data
 		}
@@ -59,7 +61,7 @@ func (m *Menu) UseMenu(trigger string) robot.Command {
 
 		case "x":
 			if update.CallbackQuery != nil {
-				bot.DeleteMessage(update.CallbackQuery.From.ID, update.CallbackQuery.Message.ID)
+				api.DeleteMessage(update.CallbackQuery.From.ID, update.CallbackQuery.Message.ID)
 			}
 
 		default:

@@ -26,7 +26,8 @@ var helloHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update
 }
 
 var infoHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update) message.Any {
-	msgID := echotron.NewMessageID(update.CallbackQuery.From.ID, update.CallbackQuery.Message.ID)
-	bot.EditMessageText("Made with ❤️ by @DazFather", msgID, nil)
+	update.Message.EditText("Made with ❤️ by @DazFather", nil)
+	return nil
+}
 	return nil
 }

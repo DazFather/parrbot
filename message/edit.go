@@ -8,7 +8,7 @@ import (
 
 // EditCaption is a method that allows to edit the caption (and others options)
 // ONLY for messages sent by the bot that contain media (like Photo or Document...)
-func (message *UpdateMessage) EditCaption(a echotron.API, opts *echotron.MessageCaptionOptions) (err error) {
+func (message *UpdateMessage) EditCaption(opts *echotron.MessageCaptionOptions) (err error) {
 	// Extracting the MessageIDOptions
 	if message == nil || message.Chat == nil {
 		return errors.New("Invalid message")
@@ -17,7 +17,7 @@ func (message *UpdateMessage) EditCaption(a echotron.API, opts *echotron.Message
 
 	// Perform the edit and clearig the response
 	var newMsg *UpdateMessage
-	newMsg, err = clearResponse(a.EditMessageCaption(msgIDOpt, opts))
+	newMsg, err = clearResponse(api.EditMessageCaption(msgIDOpt, opts))
 	if err != nil {
 		return
 	}
@@ -41,7 +41,7 @@ func (message *UpdateMessage) EditCaption(a echotron.API, opts *echotron.Message
 
 // EditLiveLocation is a method that allows to edit the Location (and others options)
 // ONLY for messages sent by the bot that contain it (like Photo or Document...)
-func (message *UpdateMessage) EditLiveLocation(a echotron.API, latitude, longitude float64, opts *echotron.EditLocationOptions) (err error) {
+func (message *UpdateMessage) EditLiveLocation(latitude, longitude float64, opts *echotron.EditLocationOptions) (err error) {
 	// Extracting the MessageIDOptions
 	if message == nil || message.Chat == nil {
 		return errors.New("Invalid message")
@@ -50,7 +50,7 @@ func (message *UpdateMessage) EditLiveLocation(a echotron.API, latitude, longitu
 
 	// Perform the edit and clearig the response
 	var newMsg *UpdateMessage
-	newMsg, err = clearResponse(a.EditMessageLiveLocation(msgIDOpt, latitude, longitude, opts))
+	newMsg, err = clearResponse(api.EditMessageLiveLocation(msgIDOpt, latitude, longitude, opts))
 	if err != nil {
 		return
 	}
@@ -68,7 +68,7 @@ func (message *UpdateMessage) EditLiveLocation(a echotron.API, latitude, longitu
 
 // EditMedia is a method that allows to edit the media (and others options)
 // ONLY for messages sent by the bot that contain it
-func (message *UpdateMessage) EditMedia(a echotron.API, media echotron.InputMedia, keyboard [][]echotron.InlineKeyboardButton) (err error) {
+func (message *UpdateMessage) EditMedia(media echotron.InputMedia, keyboard [][]echotron.InlineKeyboardButton) (err error) {
 	// Extracting the MessageIDOptions
 	if message == nil || message.Chat == nil {
 		return errors.New("Invalid message")
@@ -80,7 +80,7 @@ func (message *UpdateMessage) EditMedia(a echotron.API, media echotron.InputMedi
 		newMsg *UpdateMessage
 		opts   = &echotron.MessageReplyMarkup{ReplyMarkup: echotron.InlineKeyboardMarkup{InlineKeyboard: keyboard}}
 	)
-	newMsg, err = clearResponse(a.EditMessageMedia(msgIDOpt, media, opts))
+	newMsg, err = clearResponse(api.EditMessageMedia(msgIDOpt, media, opts))
 	if err != nil {
 		return
 	}
@@ -98,7 +98,7 @@ func (message *UpdateMessage) EditMedia(a echotron.API, media echotron.InputMedi
 
 // EditInlineKeyboard is a method that allows to edit the InlineKeyboard ONLY
 // for messages sent by the bot
-func (message *UpdateMessage) EditInlineKeyboard(a echotron.API, keyboard [][]echotron.InlineKeyboardButton) (err error) {
+func (message *UpdateMessage) EditInlineKeyboard(keyboard [][]echotron.InlineKeyboardButton) (err error) {
 	// Extracting the MessageIDOptions
 	if message == nil || message.Chat == nil {
 		return errors.New("Invalid message")
@@ -110,7 +110,7 @@ func (message *UpdateMessage) EditInlineKeyboard(a echotron.API, keyboard [][]ec
 		newMsg *UpdateMessage
 		opts   = &echotron.MessageReplyMarkup{ReplyMarkup: echotron.InlineKeyboardMarkup{InlineKeyboard: keyboard}}
 	)
-	newMsg, err = clearResponse(a.EditMessageReplyMarkup(msgIDOpt, opts))
+	newMsg, err = clearResponse(api.EditMessageReplyMarkup(msgIDOpt, opts))
 	if err != nil {
 		return
 	}
@@ -127,7 +127,7 @@ func (message *UpdateMessage) EditInlineKeyboard(a echotron.API, keyboard [][]ec
 
 // EditText is a method that allows to edit the text (and others options)
 // for textual messages (message.Text) sent by the bot
-func (message *UpdateMessage) EditText(a echotron.API, text string, opts *echotron.MessageTextOptions) (err error) {
+func (message *UpdateMessage) EditText(text string, opts *echotron.MessageTextOptions) (err error) {
 	// Extracting the MessageIDOptions
 	if message == nil || message.Chat == nil {
 		return errors.New("Invalid message")
@@ -136,7 +136,7 @@ func (message *UpdateMessage) EditText(a echotron.API, text string, opts *echotr
 
 	// Perform the edit and clearig the response
 	var newMsg *UpdateMessage
-	newMsg, err = clearResponse(a.EditMessageText(text, msgIDOpt, opts))
+	newMsg, err = clearResponse(api.EditMessageText(text, msgIDOpt, opts))
 	if err != nil {
 		return
 	}

@@ -11,7 +11,7 @@ import (
 // Log is a useful function to show what values the data is carrying using JSON.
 // tips: Be careful to who you are sending the message or the end user could
 //       be a bit confused. If you are the developer use your own chatID
-func Log(api echotron.API, chatID int64, any ...interface{}) {
+func Log(chatID int64, any ...interface{}) {
 	var message = Text{
 		fmt.Sprint("🦜 <b>Log</b> [", time.Now(), "]\n"),
 		&echotron.MessageOptions{ParseMode: echotron.HTML},
@@ -34,5 +34,5 @@ func Log(api echotron.API, chatID int64, any ...interface{}) {
 	}})
 
 	// Send the message to the specified user
-	message.Send(api, chatID)
+	message.Send(chatID)
 }
