@@ -155,3 +155,26 @@ func (message *UpdateMessage) EditText(text string, opts *echotron.MessageTextOp
 
 	return
 }
+
+// Delete the given message on the original chat and memory (setting it to nil)
+func (message *UpdateMessage) Delete() error {
+	// Guard closes
+	if message == nil {
+		return ResponseError{"Parr(B)ot", 1, "Invalid message"}
+	}
+	if message.Chat == nil {
+		return ResponseError{"Parr(B)ot", 1, "Invalid chat ID"}
+	}
+
+	// Deleting message and clearing response
+	res, err := api.DeleteMessage(message.Chat.ID, message.ID)
+	if err != nil {
+		return ResponseError{"Echotron", 1, err.Error()}
+	}
+	if !res.Ok {
+		return ResponseError{"Telegram", res.ErrorCode, res.Description}
+	}
+	message = nil
+
+	return nil
+}

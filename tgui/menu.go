@@ -42,13 +42,11 @@ func (m *Menu) UseMenu(trigger string) robot.Command {
 
 	// Create the handler function
 	var menuHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update) message.Any {
-		var api = message.GetAPI()
-
 		// Get the payload
 		var text string
 		if update.Message != nil {
 			text = update.Message.Text
-			api.DeleteMessage(update.Message.From.ID, update.Message.ID)
+			update.Message.Delete()
 		} else {
 			text = update.CallbackQuery.Data
 		}
@@ -61,6 +59,7 @@ func (m *Menu) UseMenu(trigger string) robot.Command {
 
 		case "x":
 			if update.CallbackQuery != nil {
+				var api = message.GetAPI()
 				api.DeleteMessage(update.CallbackQuery.From.ID, update.CallbackQuery.Message.ID)
 			}
 
@@ -104,7 +103,7 @@ func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *messag
 	}
 
 	msgID := echotron.NewMessageID(u.CallbackQuery.From.ID, u.CallbackQuery.Message.ID)
-	b.EditMessageText(content, msgID, opt)
+	message.GetAPI().EditMessageText(content, msgID, opt)
 	return nil
 
 }
