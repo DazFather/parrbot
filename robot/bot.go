@@ -36,8 +36,8 @@ func (b *Bot) Update(u *echotron.Update) {
 func Start(commandList []Command) {
 	// Initialization
 	LoadToken()
-	LoadCommands(commandList)
 	message.LoadAPI(TOKEN)
+	LoadCommands(commandList)
 
 	// Put life into the bot
 	dsp := echotron.NewDispatcher(TOKEN, newBot)

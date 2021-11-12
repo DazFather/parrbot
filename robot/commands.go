@@ -2,8 +2,11 @@ package robot
 
 import (
 	"regexp"
+	"log"
 
 	"parrbot/message"
+
+	"github.com/NicoNex/echotron/v3"
 )
 
 // Command is a bot's command declaration that compose the command list
@@ -24,7 +27,17 @@ var commands map[message.UpdateType]map[string]CommandFunc
 func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]CommandFunc) {
 	splitted = make(map[message.UpdateType]map[string]CommandFunc, 0)
 
+	var cmdMenu []echotron.BotCommand
+
 	for _, cmd := range commandList {
+
+		if cmd.ReplyAt & message.MESSAGE != 0 {
+			cmdMenu = append(cmdMenu, echotron.BotCommand{
+				Command: cmd.Trigger,
+				Description: cmd.Name,
+			})
+		}
+
 		for i := 0; i <= 9; i++ {
 			t := message.UpdateType(1 << i)
 			if cmd.ReplyAt&t != 0 {
@@ -34,6 +47,14 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 				splitted[t][cmd.Trigger] = cmd.Scope
 			}
 		}
+	}
+
+	res, err := message.GetAPI().SetMyCommands(nil, cmdMenu...)
+	if err != nil {
+		log.Fatal("SetMyCommands error:", err)
+	}
+	if res.Result != true || res.Ok != true {
+		log.Fatal("SetMyCommands wrong response:", res)
 	}
 
 	return
