@@ -29,5 +29,3 @@ var infoHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update)
 	update.Message.EditText("Made with ❤️ by @DazFather", nil)
 	return nil
 }
-	return nil
-}
