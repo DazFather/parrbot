@@ -1,8 +1,8 @@
 package robot
 
 import (
-	"regexp"
 	"log"
+	"regexp"
 
 	"parrbot/message"
 
@@ -31,9 +31,9 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 
 	for _, cmd := range commandList {
 
-		if cmd.ReplyAt & message.MESSAGE != 0 {
+		if cmd.ReplyAt&message.MESSAGE != 0 {
 			cmdMenu = append(cmdMenu, echotron.BotCommand{
-				Command: cmd.Trigger,
+				Command:     cmd.Trigger,
 				Description: cmd.Name,
 			})
 		}

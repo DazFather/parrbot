@@ -28,7 +28,7 @@ type Menu struct {
 type MenuPage func(b *robot.Bot) (content string, opts *echotron.MessageTextOptions)
 
 // UseMenu implements a Menu to work with a specific trigger (you can direclt add the return to the command list)
-func (m *Menu) UseMenu(trigger string) robot.Command {
+func (m *Menu) UseMenu(name, trigger string) robot.Command {
 	// Set default captions values
 	if m.NextCaption == "" {
 		m.NextCaption = "Next ⏭ [INDEX]"
@@ -75,6 +75,7 @@ func (m *Menu) UseMenu(trigger string) robot.Command {
 
 	// Create the command and return it
 	return robot.Command{
+		Name:    name,
 		Trigger: trigger,
 		ReplyAt: message.CALLBACK_QUERY + message.MESSAGE,
 		Scope:   menuHandler,
