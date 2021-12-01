@@ -26,6 +26,6 @@ var helloHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update
 }
 
 var infoHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update) message.Any {
-	update.CallbackQuery.Message.EditText("Made with ❤️ by @DazFather", nil)
+	update.CallbackQuery.EditText("Made with ❤️ by @DazFather", nil)
 	return nil
 }
