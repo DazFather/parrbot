@@ -75,10 +75,10 @@ func (m *Menu) UseMenu(name, trigger string) robot.Command {
 
 	// Create the command and return it
 	return robot.Command{
-		Name:    name,
-		Trigger: trigger,
-		ReplyAt: message.CALLBACK_QUERY + message.MESSAGE,
-		Scope:   menuHandler,
+		Description: name,
+		Trigger:     trigger,
+		ReplyAt:     message.CALLBACK_QUERY + message.MESSAGE,
+		CallFunc:       menuHandler,
 	}
 }
 

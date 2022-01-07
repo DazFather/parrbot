@@ -10,7 +10,8 @@ import (
 
 // Bot structure
 type Bot struct {
-	ChatID       int64 // ChatID of the user who is using the bot on a private chat
+	//CommandList []Command
+	ChatID int64 // ChatID of the user who is using the bot on a private chat
 }
 
 // Creates a new bot - will be called when a user first start the bot

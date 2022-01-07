@@ -26,25 +26,6 @@ func (message *UpdateMessage) EditCaption(opts *echotron.MessageCaptionOptions) 
 	return
 }
 
-func (callback *CallbackQuery) EditCaption(opts *echotron.MessageCaptionOptions) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditCaption(opts)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editCaption(msgIDOpt, opts)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
-}
-
 func editCaption(msgIDOpt echotron.MessageIDOptions, opts *echotron.MessageCaptionOptions) (message *UpdateMessage, err error) {
 	// Perform the edit and clearig the response
 	message, err = clearResponse(api.EditMessageCaption(msgIDOpt, opts))
@@ -68,8 +49,8 @@ func editCaption(msgIDOpt echotron.MessageIDOptions, opts *echotron.MessageCapti
 
 /* --- Live Location --- */
 
-// EditCaption is a method that allows to edit the caption (and others options)
-// ONLY for messages sent by the bot that contain media (like Photo or Document...)
+// EditLiveLocation is a method that allows to edit the Location (and others options)
+// ONLY for messages sent by the bot that contain it (like Photo or Document...)
 func (message *UpdateMessage) EditLiveLocation(latitude, longitude float64, opts *echotron.EditLocationOptions) (err error) {
 	if message == nil {
 		return ResponseError{"Parr(B)ot", 1, "Invalid message"}
@@ -88,27 +69,6 @@ func (message *UpdateMessage) EditLiveLocation(latitude, longitude float64, opts
 	return
 }
 
-func (callback *CallbackQuery) EditLiveLocation(latitude, longitude float64, opts *echotron.EditLocationOptions) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditLiveLocation(latitude, longitude, opts)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editLiveLocation(msgIDOpt, latitude, longitude, opts)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
-}
-
-// EditLiveLocation is a method that allows to edit the Location (and others options)
-// ONLY for messages sent by the bot that contain it (like Photo or Document...)
 func editLiveLocation(msgIDOpt echotron.MessageIDOptions, latitude, longitude float64, opts *echotron.EditLocationOptions) (message *UpdateMessage, err error) {
 	// Perform the edit and clearig the response
 	message, err = clearResponse(api.EditMessageLiveLocation(msgIDOpt, latitude, longitude, opts))
@@ -141,25 +101,6 @@ func (message *UpdateMessage) EditMedia(media echotron.InputMedia, keyboard [][]
 	newMsg, err = editMedia(msgIDOpt, media, keyboard)
 	if err == nil {
 		message = newMsg
-	}
-
-	return
-}
-
-func (callback *CallbackQuery) EditMedia(media echotron.InputMedia, keyboard [][]echotron.InlineKeyboardButton) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditMedia(media, keyboard)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editMedia(msgIDOpt, media, keyboard)
-	if err == nil {
-		callback.Message = newMsg
 	}
 
 	return
@@ -203,25 +144,6 @@ func (message *UpdateMessage) EditInlineKeyboard(keyboard [][]echotron.InlineKey
 	return
 }
 
-func (callback *CallbackQuery) EditInlineKeyboard(keyboard [][]echotron.InlineKeyboardButton) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditInlineKeyboard(keyboard)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editInlineKeyboard(msgIDOpt, keyboard)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
-}
-
 func editInlineKeyboard(msgIDOpt echotron.MessageIDOptions, keyboard [][]echotron.InlineKeyboardButton) (message *UpdateMessage, err error) {
 	// Perform the edit and clearig the response
 	var opts = &echotron.MessageReplyMarkup{ReplyMarkup: echotron.InlineKeyboardMarkup{InlineKeyboard: keyboard}}
@@ -254,25 +176,6 @@ func (message *UpdateMessage) EditText(text string, opts *echotron.MessageTextOp
 	newMsg, err = editText(msgIDOpt, text, opts)
 	if err == nil {
 		message = newMsg
-	}
-
-	return
-}
-
-func (callback *CallbackQuery) EditText(text string, opts *echotron.MessageTextOptions) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditText(text, opts)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editText(msgIDOpt, text, opts)
-	if err == nil {
-		callback.Message = newMsg
 	}
 
 	return

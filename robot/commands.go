@@ -11,10 +11,10 @@ import (
 
 // Command is a bot's command declaration that compose the command list
 type Command struct {
-	Name    string             // The name of the command
-	Trigger string             // Needs to start with the '/' character. Is the string that if contained at the start of the update would run the Scope
-	ReplyAt message.UpdateType // Tells witch UpdateType(s) the bot will reply at, sum them to put more
-	Scope   CommandFunc        // The actual function that the bot will run
+	Description string             // A description of the command that will be displayed on the "/" menu if the ReplyAt includes MESSAGE
+	Trigger     string             // Needs to start with the '/' character. Is the string that if contained at the start of the update would run the Scope
+	ReplyAt     message.UpdateType // Tells witch UpdateType(s) the bot will reply at, sum them to put more
+	CallFunc       CommandFunc        // The actual function that the bot will run
 }
 
 // CommandFunc is a custom type that rapresent a command that the bot should be able to run
@@ -34,7 +34,7 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 		if cmd.ReplyAt&message.MESSAGE != 0 {
 			cmdMenu = append(cmdMenu, echotron.BotCommand{
 				Command:     cmd.Trigger,
-				Description: cmd.Name,
+				Description: cmd.Description,
 			})
 		}
 
@@ -44,7 +44,7 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 				if m := splitted[t]; m == nil {
 					splitted[t] = make(map[string]CommandFunc, 0)
 				}
-				splitted[t][cmd.Trigger] = cmd.Scope
+				splitted[t][cmd.Trigger] = cmd.CallFunc
 			}
 		}
 	}

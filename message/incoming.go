@@ -24,18 +24,6 @@ type Update struct {
 	ChatJoinRequest    *echotron.ChatJoinRequest    `json:"chat_join_request,omitempty"`
 }
 
-// CallbackQuery is the Parr(b)ot rapresentation the echotron.CallbackQuery,
-// the difference is that it have the custom UpdateMessage instead of echotron.Message type
-type CallbackQuery struct {
-	ID              string         `json:"id"`
-	From            *echotron.User `json:"from"`
-	Message         *UpdateMessage `json:"parrbot_message,omitempty"`
-	InlineMessageID string         `json:"inline_message_id,omitempty"`
-	ChatInstance    string         `json:"chat_instance,omitempty"`
-	Data            string         `json:"data,omitempty"`
-	GameShortName   string         `json:"game_short_name,omitempty"`
-}
-
 // UpdateType represent a possible incoming Update types used on the "ReplyAt" Command inside the command list
 type UpdateType uint16
 
