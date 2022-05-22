@@ -57,10 +57,10 @@ const (
 type UpdateMessage struct {
 	// Normal Telegram / Echotron resonse
 	ID              int                            `json:"message_id"`
-	Date            int                            `json:"date"`
 	From            *echotron.User                 `json:"from,omitempty"` // <nil> if channel
-	Chat            *echotron.Chat                 `json:"chat"`
 	SenderChat      *echotron.Chat                 `json:"sender_chat,omitempty"`
+	Date            int                            `json:"date"`
+	Chat            *echotron.Chat                 `json:"chat"`
 	EditDate        int                            `json:"edit_date,omitempty"`
 	AuthorSignature string                         `json:"author_signature,omitempty"`
 	InlineKeyboard  *echotron.InlineKeyboardMarkup `json:"reply_markup,omitempty"` // it Changed the name: ReplyMarkup (too generic) -> InlineKeyboard
@@ -92,6 +92,7 @@ type ForwardInfo struct {
 	Signature  string         `json:"forward_signature,omitempty"`
 	SenderName string         `json:"forward_sender_name,omitempty"`
 	Date       int            `json:"forward_date,omitempty"`
+	Automatic  bool           `json:"is_automatic_forward_date,omitempty"`
 }
 
 // MediaInfo countain all the infos about medias, Polls and so on contained into a message
@@ -130,9 +131,11 @@ type SystemNotificationInfo struct {
 	MigrateFromChatID             int                                     `json:"migrate_from_chat_id,omitempty"`
 	ConnectedWebsite              string                                  `json:"connected_website,omitempty"`
 	ProximityAlertTriggered       *echotron.ProximityAlertTriggered       `json:"proximity_alert_triggered,omitempty"`
-	VoiceChatStarted              *echotron.VoiceChatStarted              `json:"voice_chat_started,omitempty"`
-	VoiceChatEnded                *echotron.VoiceChatEnded                `json:"voice_chat_ended,omitempty"`
-	VoiceChatParticipantsInvited  *echotron.VoiceChatParticipantsInvited  `json:"voice_chat_participants_invited,omitempty"`
+	VideoChatScheduled            *echotron.VideoChatScheduled            `json:"video_chat_scheduled,omitempty"`
+	VideoChatStarted              *echotron.VideoChatStarted              `json:"video_chat_started,omitempty"`
+	VideoChatEnded                *echotron.VideoChatEnded                `json:"video_chat_ended,omitempty"`
+	VideoChatParticipantsInvited  *echotron.VideoChatParticipantsInvited  `json:"video_chat_participants_invited,omitempty"`
+	WebAppData                    *echotron.WebAppData                    `json:"web_app_data,omitempty"`
 	PinnedMessage                 *UpdateMessage                          `json:"parrbot_pinned_message,omitempty"`
 }
 
