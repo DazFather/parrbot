@@ -9,7 +9,7 @@ A just born Telegram bot framework in [Go](https://golang.org) built on top of t
 
 ## Philosophy and Design
 
-**Framework** not library: Parr(B)ot main focus is to help you onbetter organize your code, in a way that is highly scalable and reusable.
+**Framework** not library: Parr(B)ot main focus is to help you to better organize your code in a way that is highly scalable and reusable.
 Libraries are cool but if not used carefully tends to transform your code into an extremely difficult to debug spaghetti-code monster.
 > _Framework is like the nest of your project_ 🦜
 
