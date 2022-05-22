@@ -20,7 +20,7 @@ type Menu struct {
 	// The caption of the navigation buttons. You can embed "[INDEX]" inside
 	// PreviousCaption and NextCaption to show the number of the related page.
 	// By default (if missing or empty string are passed) their values is:
-	// "Next ⏭ [INDEX]", "[INDEX] ⏮ Prev.", "❌ Close".
+	// "⏭ [INDEX]", "[INDEX] ⏮", "❌".
 	NextCaption, PreviousCaption, CloseCaption string
 }
 
@@ -31,13 +31,13 @@ type MenuPage func(b *robot.Bot) (content string, opts *echotron.MessageTextOpti
 func (m *Menu) UseMenu(name, trigger string) robot.Command {
 	// Set default captions values
 	if m.NextCaption == "" {
-		m.NextCaption = "Next ⏭ [INDEX]"
+		m.NextCaption = "⏭ [INDEX]"
 	}
 	if m.PreviousCaption == "" {
-		m.PreviousCaption = "[INDEX] ⏮ Prev."
+		m.PreviousCaption = "[INDEX] ⏮"
 	}
 	if m.CloseCaption == "" {
-		m.CloseCaption = "❌ Close"
+		m.CloseCaption = "❌"
 	}
 
 	// Create the handler function
@@ -88,7 +88,10 @@ func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *messag
 	if opt == nil {
 		opt = new(echotron.MessageTextOptions)
 	}
-	opt.ReplyMarkup.InlineKeyboard = append(opt.ReplyMarkup.InlineKeyboard, m.genButtons(trigger, pageNumber))
+	keyboard := opt.ReplyMarkup.InlineKeyboard
+	if len(keyboard) == 0 || keyboard[len(keyboard)-1][0].CallbackData != fmt.Sprint(trigger, " ", pageNumber-1) {
+		opt.ReplyMarkup.InlineKeyboard = append(keyboard, m.genButtons(trigger, pageNumber))
+	}
 
 	if u.Message != nil {
 		msg := message.Text{
@@ -105,6 +108,7 @@ func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *messag
 
 	msgID := echotron.NewMessageID(u.CallbackQuery.From.ID, u.CallbackQuery.Message.ID)
 	message.GetAPI().EditMessageText(content, msgID, opt)
+	u.CallbackQuery.Answer(nil)
 	return nil
 
 }
@@ -135,9 +139,42 @@ func (m Menu) genButtons(trigger string, pageNumber int) (btnRow []echotron.Inli
 	return
 }
 
+type PageOptions = echotron.MessageTextOptions
+
 // StaticPage returns a MenuPage that will return always the same output
-func StaticPage(content string, opt *echotron.MessageTextOptions) MenuPage {
+func StaticPage(content string, opt *PageOptions) MenuPage {
 	return func(*robot.Bot) (string, *echotron.MessageTextOptions) {
 		return content, opt
 	}
+}
+
+func checkPageOpt(opt *PageOptions) *PageOptions {
+	if opt == nil {
+		return new(echotron.MessageTextOptions)
+	}
+	return opt
+}
+
+func ParseModeOpt(opt *PageOptions, parseMode echotron.ParseMode) *PageOptions {
+	opt = checkPageOpt(opt)
+	opt.ParseMode = parseMode
+	return opt
+}
+
+func ReplyMarkupOpt(opt *PageOptions, keyboard [][]InlineButton) *PageOptions {
+	opt = checkPageOpt(opt)
+	opt.ReplyMarkup = InlineKeyboard(keyboard)
+	return opt
+}
+
+func GenReplyMarkupOpt(opt *PageOptions, columns int, fromList ...InlineButton) *PageOptions {
+	opt = checkPageOpt(opt)
+	opt.ReplyMarkup = GenInlineKeyboard(columns, fromList...)
+	return opt
+}
+
+func DisableWebPagePreview(opt *PageOptions, disable bool) *PageOptions {
+	opt = checkPageOpt(opt)
+	opt.DisableWebPagePreview = disable
+	return opt
 }
