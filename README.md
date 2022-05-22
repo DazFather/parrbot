@@ -9,9 +9,8 @@ A just born Telegram bot framework in [Go](https://golang.org) built on top of t
 
 ## Philosophy and Design
 
-**Framework vs Library**: Let's start to define what Parr(B)ot is not: A library.
-A library is a collection of function that you can use _as you want*_ in your code, without a specific order (es. [Pandas](https://pandas.pydata.org/), [Bootstrap](https://getbootstrap.com/)).
-A framework on the other hand gives you order for both files and code structure (es. [Django](https://www.djangoproject.com/), [Angular](https://angular.io/)) and tends to have more layer of abstraction.
+**Framework** not library: Parr(B)ot main focus is to help you onbetter organize your code, in a way that is highly scalable and reusable.
+Libraries are cool but if not used carefully tends to transform your code into an extremely difficult to debug spaghetti-code monster.
 > _Framework is like the nest of your project_ 🦜
 
 **Modular**: Modules helps developer to access, reuse and expand their codes and also give a sense of order to your project that will help in the long run. The base structure of Parr(b)ot is design to be easy to maintain in the future
@@ -24,10 +23,12 @@ You can find an example of what we mean on the "incoming.go" file (inside the "m
 
 **Customizable**: The parr(b)ot modules are not made to be untouched but the exact opposite. User is more then welcome to change the framework behavior in order for example to extend a module with more useful functions or types, to change the information carried by the Bot or to initialize the bot in a different way. Is up to you.
 The framework will try to guide you using comments and naming to go at the level of deepness that you desire
-> _Explore the jungle, is fun_ 🦜
+> _Explore the jungle, dangerous but fun_ 🦜
 
 ## Usage
 
  _Step 1._ - Clone this repo (and be sure to have Go installed)
 
  _Step 2._ - Create your own awesome bot (see an example on main.go)
+
+ _Step 3._ - Make it fly!
