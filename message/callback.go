@@ -29,97 +29,32 @@ func (callback *CallbackQuery) Answer(opts *echotron.CallbackQueryOptions) (reso
 	return
 }
 
-func (callback *CallbackQuery) EditCaption(opts *echotron.MessageCaptionOptions) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditCaption(opts)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editCaption(msgIDOpt, opts)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
+// EditText is a method that allows to edit the text (and others options)
+// for textual messages (message.Text) sent by the bot
+func (callback CallbackQuery) EditText(text string, opts *echotron.MessageTextOptions) error {
+	return editText(callback, text, opts)
 }
 
-func (callback *CallbackQuery) EditLiveLocation(latitude, longitude float64, opts *echotron.EditLocationOptions) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditLiveLocation(latitude, longitude, opts)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editLiveLocation(msgIDOpt, latitude, longitude, opts)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
+// EditMedia is a method that allows to edit the media (and others options)
+// ONLY for messages sent by the bot that contain it
+func (callback CallbackQuery) EditMedia(media echotron.InputMedia, opts *echotron.MessageReplyMarkup) error {
+	return editMedia(callback, media, opts)
 }
 
-func (callback *CallbackQuery) EditMedia(media echotron.InputMedia, keyboard [][]echotron.InlineKeyboardButton) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditMedia(media, keyboard)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editMedia(msgIDOpt, media, keyboard)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
+// EditInlineKeyboard is a method that allows to edit the InlineKeyboard ONLY
+// for messages sent by the bot
+func (callback CallbackQuery) EditInlineKeyboard(keyboard [][]echotron.InlineKeyboardButton) error {
+	return editInlineKbd(callback, keyboard)
 }
 
-func (callback *CallbackQuery) EditInlineKeyboard(keyboard [][]echotron.InlineKeyboardButton) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditInlineKeyboard(keyboard)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editInlineKeyboard(msgIDOpt, keyboard)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
+// EditLiveLocation is a method that allows to edit the Location (and others options)
+// ONLY for messages sent by the bot that contain it (like Photo or Document...)
+func (callback CallbackQuery) EditLiveLocation(latitude, longitude float64, opts *echotron.EditLocationOptions) error {
+	return editLiveLocation(callback, latitude, longitude, opts)
 }
 
-func (callback *CallbackQuery) EditText(text string, opts *echotron.MessageTextOptions) (err error) {
-	// Try to edit the message
-	err = callback.Message.EditText(text, opts)
-	if err == nil {
-		return
-	}
-
-	// Extracting the MessageIDOptions
-	msgIDOpt := echotron.NewInlineMessageID(callback.ID)
-
-	newMsg := new(UpdateMessage)
-	newMsg, err = editText(msgIDOpt, text, opts)
-	if err == nil {
-		callback.Message = newMsg
-	}
-
-	return
+// EditCaption is a method that allows to edit the caption (and others options)
+// ONLY for messages sent by the bot that contain media (like Photo or Document...)
+func (callback CallbackQuery) EditCaption(opts *echotron.MessageCaptionOptions) error {
+	return editCaption(callback, opts)
 }
