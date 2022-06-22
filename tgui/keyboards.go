@@ -17,16 +17,19 @@ func GenInlineKeyboard(columns int, fromList ...InlineButton) echotron.InlineKey
 	}
 
 	var (
-		row      []echotron.InlineKeyboardButton
+		row      = make([]InlineButton, columns)
 		finalKbd [][]echotron.InlineKeyboardButton
 	)
 
+	i := 0
 	for _, btn := range fromList {
-		row = append(row, btn)
+		row[i] = btn
 		if len(row) >= columns {
 			finalKbd = append(finalKbd, row)
-			row = nil
+			row = make([]InlineButton, columns)
+			i = 0
 		}
+		i++
 	}
 	if len(row) > 0 {
 		finalKbd = append(finalKbd, row)
