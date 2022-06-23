@@ -38,16 +38,18 @@ type UpdateType uint16
 //       reply at for example MESSAGE + CHANNEL_POST (normal written messages)
 //       and channel posts. If you want all, you can use ANY
 const (
-	MESSAGE              UpdateType = 1 << iota // 0000000001
-	EDITED_MESSAGE                              // 0000000010
-	CHANNEL_POST                                // 0000000100
-	EDITED_CHANNEL_POST                         // 0000001000
-	INLINE_QUERY                                // 0000010000
-	CHOSEN_INLINE_RESULT                        // 0000100000
-	CALLBACK_QUERY                              // 0001000000
-	MY_CHAT_MEMBER                              // 0010000000
-	CHAT_MEMBER                                 // 0100000000
-	CHAT_JOIN_REQUEST                           // 1000000000
+	MESSAGE              UpdateType = 1 << iota // 000000000001
+	EDITED_MESSAGE                              // 000000000010
+	CHANNEL_POST                                // 000000000100
+	EDITED_CHANNEL_POST                         // 000000001000
+	INLINE_QUERY                                // 000000010000
+	CHOSEN_INLINE_RESULT                        // 000000100000
+	CALLBACK_QUERY                              // 000001000000
+	SHIPPING_QUERY                              // 000010000000
+	PRE_CHECKOUT_QUERY                          // 000100000000
+	MY_CHAT_MEMBER                              // 001000000000
+	CHAT_MEMBER                                 // 010000000000
+	CHAT_JOIN_REQUEST                           // 100000000000
 
 	// ANY represents any possible UpdateType.
 	ANY = (1 << iota) - 1 // 1111111111
