@@ -1,4 +1,4 @@
-module parrbot
+module github.com/DazFather/parrbot
 
 go 1.18
 
