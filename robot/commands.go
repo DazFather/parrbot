@@ -31,7 +31,7 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 
 	for _, cmd := range commandList {
 
-		if cmd.ReplyAt&message.MESSAGE != 0 {
+		if cmd.ReplyAt&message.MESSAGE != 0 && cmd.Trigger != "" && cmd.Description != ""{
 			cmdMenu = append(cmdMenu, echotron.BotCommand{
 				Command:     cmd.Trigger,
 				Description: cmd.Description,
@@ -47,6 +47,10 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 				splitted[t][cmd.Trigger] = cmd.CallFunc
 			}
 		}
+	}
+
+	if len(cmdMenu) == 0 {
+		return
 	}
 
 	res, err := message.GetAPI().SetMyCommands(nil, cmdMenu...)
