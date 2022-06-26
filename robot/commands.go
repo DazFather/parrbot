@@ -4,7 +4,7 @@ import (
 	"log"
 	"regexp"
 
-	"parrbot/message"
+	"github.com/DazFather/parrbot/message"
 
 	"github.com/NicoNex/echotron/v3"
 )
@@ -31,7 +31,7 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 
 	for _, cmd := range commandList {
 
-		if cmd.ReplyAt&message.MESSAGE != 0 && cmd.Trigger != "" && cmd.Description != ""{
+		if cmd.ReplyAt&message.MESSAGE != 0 && cmd.Trigger != "" && cmd.Description != "" {
 			cmdMenu = append(cmdMenu, echotron.BotCommand{
 				Command:     cmd.Trigger,
 				Description: cmd.Description,
