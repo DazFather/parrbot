@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"parrbot/message"
-	"parrbot/robot"
+	"github.com/DazFather/parrbot/message"
+	"github.com/DazFather/parrbot/robot"
 
 	"github.com/NicoNex/echotron/v3"
 )

@@ -3,9 +3,9 @@
 package main
 
 import (
-	"parrbot/message" // (Core) Incoming / Outgoing message-related
-	"parrbot/robot"   // (Core) Parr(B)ot core functionality
-	"parrbot/tgui"    // (Utility) Toolkit for UI
+	"github.com/DazFather/parrbot/message" // (Core) Incoming / Outgoing message-related
+	"github.com/DazFather/parrbot/robot"   // (Core) Parr(B)ot core functionality
+	"github.com/DazFather/parrbot/tgui"    // (Utility) Toolkit for UI
 )
 
 func main() {
