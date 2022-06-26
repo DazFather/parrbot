@@ -27,7 +27,7 @@ The framework will try to guide you using comments and naming to go at the level
 
 ## Usage
 
- _Step 1._ - Clone this repo (and be sure to have Go installed)
+ _Step 1._ - Clone this repo or use "import github.com/DazFather/parrbot/<package>" to import the packages (and be sure to have Go installed)
 
  _Step 2._ - Create your own awesome bot (see an example on main.go)
 

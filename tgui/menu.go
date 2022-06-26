@@ -25,7 +25,7 @@ type Menu struct {
 }
 
 // MenuPage is a function that will return the content that will be shown when a user request that page of the Menu
-type MenuPage func(b *robot.Bot) (content string, opts *echotron.MessageTextOptions)
+type MenuPage func(b *robot.Bot) (content string, opts *PageOptions)
 
 // UseMenu implements a Menu to work with a specific trigger (you can direclt add the return to the command list)
 func (m *Menu) UseMenu(name, trigger string) robot.Command {
@@ -150,7 +150,7 @@ func StaticPage(content string, opt *PageOptions) MenuPage {
 
 func checkPageOpt(opt *PageOptions) *PageOptions {
 	if opt == nil {
-		return new(echotron.MessageTextOptions)
+		opt = new(echotron.MessageTextOptions)
 	}
 	return opt
 }
