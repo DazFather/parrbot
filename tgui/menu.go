@@ -84,30 +84,34 @@ func (m *Menu) UseMenu(name, trigger string) robot.Command {
 
 // SelectPage select and call the return of a specific page of the Menu
 func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *message.Update) message.Any {
-	var content, opt = m.Pages[pageNumber](b)
-	if opt == nil {
-		opt = new(echotron.MessageTextOptions)
+	var (
+		opts         PageOptions
+		content, opt = m.Pages[pageNumber](b)
+	)
+	if opt != nil {
+		opts = *opt
 	}
-	keyboard := opt.ReplyMarkup.InlineKeyboard
+
+	keyboard := opts.ReplyMarkup.InlineKeyboard
 	if len(keyboard) == 0 || keyboard[len(keyboard)-1][0].CallbackData != fmt.Sprint(trigger, " ", pageNumber-1) {
-		opt.ReplyMarkup.InlineKeyboard = append(keyboard, m.genButtons(trigger, pageNumber))
+		opts.ReplyMarkup.InlineKeyboard = append(keyboard, m.genButtons(trigger, pageNumber))
 	}
 
 	if u.Message != nil {
 		msg := message.Text{
 			Text: content,
 			Opts: &echotron.MessageOptions{
-				ParseMode:             opt.ParseMode,
-				Entities:              opt.Entities,
-				DisableWebPagePreview: opt.DisableWebPagePreview,
-				ReplyMarkup:           opt.ReplyMarkup,
+				ParseMode:             opts.ParseMode,
+				Entities:              opts.Entities,
+				DisableWebPagePreview: opts.DisableWebPagePreview,
+				ReplyMarkup:           opts.ReplyMarkup,
 			},
 		}
 		return msg
 	}
 
 	msgID := echotron.NewMessageID(u.CallbackQuery.From.ID, u.CallbackQuery.Message.ID)
-	message.GetAPI().EditMessageText(content, msgID, opt)
+	message.GetAPI().EditMessageText(content, msgID, &opts)
 	u.CallbackQuery.Answer(nil)
 	return nil
 
