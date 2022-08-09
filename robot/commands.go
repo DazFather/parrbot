@@ -55,10 +55,10 @@ func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]
 
 	res, err := message.GetAPI().SetMyCommands(nil, cmdMenu...)
 	if err != nil {
-		log.Fatal("SetMyCommands error:", err)
+		log.Fatal("SetMyCommands error: ", err)
 	}
 	if res.Result != true || res.Ok != true {
-		log.Fatal("SetMyCommands wrong response:", res)
+		log.Fatal("SetMyCommands wrong response: ", res)
 	}
 
 	return

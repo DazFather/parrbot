@@ -8,6 +8,8 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
+var dsp *echotron.Dispatcher
+
 // Bot structure
 type Bot struct {
 	//CommandList []Command
@@ -17,6 +19,13 @@ type Bot struct {
 // Creates a new bot - will be called when a user first start the bot
 func newBot(chatID int64) echotron.Bot {
 	return &Bot{chatID}
+	go bot.selfDestruct(time.After(time.Hour * 2))
+	return bot
+}
+
+func (b *Bot) selfDestruct(timech <-chan time.Time) {
+	<-timech
+	dsp.DelSession(b.ChatID)
 }
 
 // Update is used to manage the incoming inputs from Telegram
@@ -39,8 +48,8 @@ func Start(commandList []Command) {
 	LoadToken()
 	message.LoadAPI(TOKEN)
 	LoadCommands(commandList)
+	dsp = echotron.NewDispatcher(token, newBot)
 
 	// Put life into the bot
-	dsp := echotron.NewDispatcher(TOKEN, newBot)
 	log.Println(dsp.Poll())
 }
