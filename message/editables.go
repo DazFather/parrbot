@@ -72,6 +72,26 @@ func editCaption(e editable, opts *echotron.MessageCaptionOptions) error {
 	})
 }
 
+func delete(e editable) error {
+	message := e.grabMessage()
+	if message == nil {
+		return ResponseError{"Parr(B)ot", 1, "Unable to retreive message"}
+	}
+	if message.Chat != nil {
+		return ResponseError{"Parr(B)ot", 1, "Invalid chat ID"}
+	}
+
+	// Deleting message and clearing response
+	res, err := api.DeleteMessage(message.Chat.ID, message.ID)
+	if err != nil {
+		return ResponseError{"Echotron", 1, err.Error()}
+	}
+	if !res.Ok {
+		return ResponseError{"Telegram", res.ErrorCode, res.Description}
+	}
+	return nil
+}
+
 /* --- Implementing UpdateMessage --- */
 
 func (message *UpdateMessage) grabMessage() *UpdateMessage {
@@ -97,6 +117,33 @@ func (callback CallbackQuery) extractID() (msgIDOpt *echotron.MessageIDOptions) 
 	if msgIDOpt == nil {
 		idOpt := echotron.NewInlineMessageID(callback.InlineMessageID)
 		msgIDOpt = &idOpt
+	}
+	return
+}
+
+/* --- Implementing Update --- */
+
+func (update Update) grabMessage() *UpdateMessage {
+	if update.Message != nil {
+		return update.Message
+	} else if update.EditedMessage != nil {
+		return update.EditedMessage
+	} else if update.ChannelPost != nil {
+		return update.ChannelPost
+	} else if update.EditedChannelPost != nil {
+		return update.EditedChannelPost
+	} else if update.CallbackQuery != nil {
+		return update.CallbackQuery.grabMessage()
+	}
+
+	return nil
+}
+
+func (update Update) extractID() (msgIDOpt *echotron.MessageIDOptions) {
+	if update.CallbackQuery != nil {
+		msgIDOpt = update.CallbackQuery.extractID()
+	} else if msg := update.grabMessage(); msg != nil {
+		msgIDOpt = msg.extractID()
 	}
 	return
 }

@@ -2,7 +2,6 @@ package message
 
 import (
 	"encoding/json"
-	"errors"
 	"log"
 
 	"github.com/NicoNex/echotron/v3"
@@ -167,44 +166,9 @@ func CastUpdate(original *echotron.Update) (update *Update) {
 }
 
 func (u Update) FromMessage() (msg *UpdateMessage) {
-	if u.Message != nil {
-		msg = u.Message
-	} else if u.EditedMessage != nil {
-		msg = u.EditedMessage
-	} else if u.ChannelPost != nil {
-		msg = u.ChannelPost
-	} else if u.EditedChannelPost != nil {
-		msg = u.EditedChannelPost
-	} else if u.CallbackQuery != nil && u.CallbackQuery.Message != nil {
-		msg = u.CallbackQuery.Message
-	}
-
-	return msg
+	return u.grabMessage()
 }
 
 func (u Update) DeleteMessage() error {
-	if msg := u.FromMessage(); msg != nil {
-		return msg.Delete()
-	}
-	return errors.New("Cannot retrive message to delete")
-}
-
-func (u Update) ShowMessage(content string, opts *echotron.MessageTextOptions) Any {
-	if u.CallbackQuery != nil {
-		u.CallbackQuery.EditText(content, opts)
-		return nil
-	}
-	return Text{content, toMessageOpt(opts)}
-}
-
-func toMessageOpt(opts *echotron.MessageTextOptions) *echotron.MessageOptions {
-	if opts == nil {
-		return nil
-	}
-	return &echotron.MessageOptions{
-		ParseMode:             opts.ParseMode,
-		Entities:              opts.Entities,
-		DisableWebPagePreview: opts.DisableWebPagePreview,
-		ReplyMarkup:           opts.ReplyMarkup,
-	}
+	return delete(u)
 }
