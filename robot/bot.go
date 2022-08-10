@@ -2,6 +2,7 @@ package robot
 
 import (
 	"log"
+	"time"
 
 	"github.com/DazFather/parrbot/message"
 
@@ -18,7 +19,7 @@ type Bot struct {
 
 // Creates a new bot - will be called when a user first start the bot
 func newBot(chatID int64) echotron.Bot {
-	return &Bot{chatID}
+	bot := &Bot{chatID}
 	go bot.selfDestruct(time.After(time.Hour * 2))
 	return bot
 }
@@ -48,7 +49,7 @@ func Start(commandList []Command) {
 	LoadToken()
 	message.LoadAPI(TOKEN)
 	LoadCommands(commandList)
-	dsp = echotron.NewDispatcher(token, newBot)
+	dsp = echotron.NewDispatcher(TOKEN, newBot)
 
 	// Put life into the bot
 	log.Println(dsp.Poll())

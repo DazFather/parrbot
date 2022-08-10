@@ -89,26 +89,26 @@ func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *messag
 		opt = new(EditOptions)
 	}
 
-	keyboard := opts.ReplyMarkup.InlineKeyboard
+	keyboard := opt.ReplyMarkup.InlineKeyboard
 	if len(keyboard) == 0 || keyboard[len(keyboard)-1][0].CallbackData != fmt.Sprint(trigger, " ", pageNumber-1) {
-		opts.ReplyMarkup.InlineKeyboard = append(keyboard, m.genButtons(trigger, pageNumber))
+		opt.ReplyMarkup.InlineKeyboard = append(keyboard, m.genButtons(trigger, pageNumber))
 	}
 
 	if u.Message != nil {
 		msg := message.Text{
 			Text: content,
 			Opts: &echotron.MessageOptions{
-				ParseMode:             opts.ParseMode,
-				Entities:              opts.Entities,
-				DisableWebPagePreview: opts.DisableWebPagePreview,
-				ReplyMarkup:           opts.ReplyMarkup,
+				ParseMode:             opt.ParseMode,
+				Entities:              opt.Entities,
+				DisableWebPagePreview: opt.DisableWebPagePreview,
+				ReplyMarkup:           opt.ReplyMarkup,
 			},
 		}
 		return msg
 	}
 
 	msgID := echotron.NewMessageID(u.CallbackQuery.From.ID, u.CallbackQuery.Message.ID)
-	message.GetAPI().EditMessageText(content, msgID, &opts)
+	message.GetAPI().EditMessageText(content, msgID, opt)
 	u.CallbackQuery.Answer(nil)
 	return nil
 
