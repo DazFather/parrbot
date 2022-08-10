@@ -30,30 +30,34 @@ func ShowMessage(u message.Update, text string, opt *EditOptions) (sent *message
 	return nil, errors.New("Invalid given update")
 }
 
-/* --- Paged Menu --- */
+// Menu represents a generic graphical menu introduced by this package (ex. PagedMenu)
+type Menu interface {
+	// Initialize the menu before the robot.CommandFunc is created
+	initialize(trigger string)
 
-// PagedMenu is a collection of messages that can be seen by pressing the related
-// button. The menu can be triggered by both a MESSAGE and a CALLBACK_QUERY.
-type PagedMenu struct {
-	// The collection of pages of the menu, required to work
-	Pages []Page
+	// Select the previous page, nil if is not possible. Called when payload = "back"
+	SelectPrevious() *Page
 
-	// The caption of the navigation buttons. You can embed "[INDEX]" inside
-	// PreviousCaption and NextCaption to show the number of the related page.
-	// By default (if missing or empty string are passed) their values is:
-	// "⏭ [INDEX]", "[INDEX] ⏮", "❌".
-	NextCaption, PreviousCaption, CloseCaption string
-	trigger                                    string
-	current                                    int
+	// Select the home page of the menu. Called when payload = ""
+	SelectHome() Page
+
+	// Select a generic page specified by pageSelector, the payload after trigger.
+	// The error will cause an alert (if possible) and a log on console
+	Select(pageSelector string) (*Page, error)
+
+	// Show the selected page on screen. If returned the error will be fatal
+	Show(page Page, b *robot.Bot, u *message.Update) error
 }
 
 // Page is a function that will return the content that will be shown when a user request that page of the Menu
 type Page func(b *robot.Bot) (content string, opts *EditOptions)
 
 // UseMenu allows to generate the robot.Command from a given menu to make it work
-func UseMenu(menu PagedMenu, trigger, description string) robot.Command {
+func UseMenu(menu Menu, trigger, description string) robot.Command {
+	// Initialize the menu
 	menu.initialize(trigger)
 
+	// Create the command handler that will be called at every new update
 	var menuHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update) message.Any {
 		var (
 			payload string
@@ -113,6 +117,8 @@ func UseMenu(menu PagedMenu, trigger, description string) robot.Command {
 	}
 }
 
+// collapse delete the message contained in the update and display an alert with
+// given message (if != "") in case of a CALLBACK_QUERY
 func collapse(update *message.Update, message string) {
 	if callback := update.CallbackQuery; callback != nil {
 		var opt *echotron.CallbackQueryOptions
@@ -133,6 +139,25 @@ func StaticPage(content string, pageOption *EditOptions) Page {
 	}
 }
 
+
+/* --- Paged Menu --- */
+
+// PagedMenu is a collection of messages that can be seen by pressing the related
+// button. The menu can be triggered by both a MESSAGE and a CALLBACK_QUERY.
+type PagedMenu struct {
+	// The collection of pages of the menu, required to work
+	Pages []Page
+
+	// The caption of the navigation buttons. You can embed "[INDEX]" inside
+	// PreviousCaption and NextCaption to show the number of the related page.
+	// By default (if missing or empty string are passed) their values is:
+	// "⏭ [INDEX]", "[INDEX] ⏮", "❌".
+	NextCaption, PreviousCaption, CloseCaption string
+	trigger                                    string
+	current                                    int
+}
+
+// initialize a PagedMenu setting optional captions, given trigger and current page
 func (m *PagedMenu) initialize(trigger string) {
 	if m.NextCaption == "" {
 		m.NextCaption = "⏭ [INDEX]"
@@ -147,6 +172,8 @@ func (m *PagedMenu) initialize(trigger string) {
 	m.current = 0
 }
 
+// SelectPrevious allows to get the page before the current and reset current.
+// When not possible (current page index = 0) returns nil
 func (m *PagedMenu) SelectPrevious() *Page {
 	if m.current <= 0 {
 		return nil
@@ -155,11 +182,13 @@ func (m *PagedMenu) SelectPrevious() *Page {
 	return &m.Pages[m.current]
 }
 
+// SelectHome allows to get the first page and reset current
 func (m *PagedMenu) SelectHome() Page {
 	m.current = 0
 	return m.Pages[0]
 }
 
+// Select a page by it's index (converting it into an integer) and reset current
 func (m *PagedMenu) Select(pageIndex string) (*Page, error) {
 	n, err := strconv.Atoi(pageIndex)
 	if n >= 0 && n < len(m.Pages) && err != nil {
@@ -169,6 +198,7 @@ func (m *PagedMenu) Select(pageIndex string) (*Page, error) {
 	return &m.Pages[n], nil
 }
 
+// Show a given page adding the navigation buttons: previous / close / next
 func (m *PagedMenu) Show(page Page, b *robot.Bot, u *message.Update) error {
 	var (
 		keyboard     [][]InlineButton
