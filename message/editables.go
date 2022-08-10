@@ -142,7 +142,8 @@ func (update Update) extractID() (msgIDOpt *echotron.MessageIDOptions) {
 	if callback := update.CallbackQuery; callback != nil {
 		msgIDOpt = callback.extractID()
 	} else if result := update.ChosenInlineResult; result != nil {
-		msgIDOpt = echotron.NewInlineMessageID(result.InlineMessageID)
+		id := echotron.NewInlineMessageID(result.InlineMessageID)
+		msgIDOpt = &id
 	} else if msg := update.grabMessage(); msg != nil {
 		msgIDOpt = msg.extractID()
 	}
