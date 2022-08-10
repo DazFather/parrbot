@@ -58,3 +58,7 @@ func (callback CallbackQuery) EditLiveLocation(latitude, longitude float64, opts
 func (callback CallbackQuery) EditCaption(opts *echotron.MessageCaptionOptions) error {
 	return editCaption(callback, opts)
 }
+
+func (callback CallbackQuery) Delete() error {
+	return delete(callback)
+}
