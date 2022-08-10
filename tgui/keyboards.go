@@ -40,7 +40,7 @@ func KeyboardRemover(globally bool) echotron.ReplyKeyboardRemove {
 }
 
 // Arrange the layout of given buttons in a given number of columns
-func Arrange[AnyButton InlineButton | KeyButton](columns int, fromList ...AnyButton) (keyboard [][]AnyButton) {
+func Arrange[AnyButton InlineButton | KeyButton | InlineMenuItem](columns int, fromList ...AnyButton) (keyboard [][]AnyButton) {
 	if columns < 1 {
 		return
 	}
