@@ -25,7 +25,7 @@ type Menu struct {
 }
 
 // MenuPage is a function that will return the content that will be shown when a user request that page of the Menu
-type MenuPage func(b *robot.Bot) (content string, opts *PageOptions)
+type MenuPage func(b *robot.Bot) (content string, opts *EditOptions)
 
 // UseMenu implements a Menu to work with a specific trigger (you can direclt add the return to the command list)
 func (m *Menu) UseMenu(name, trigger string) robot.Command {
@@ -84,12 +84,9 @@ func (m *Menu) UseMenu(name, trigger string) robot.Command {
 
 // SelectPage select and call the return of a specific page of the Menu
 func (m Menu) SelectPage(trigger string, pageNumber int, b *robot.Bot, u *message.Update) message.Any {
-	var (
-		opts         PageOptions
-		content, opt = m.Pages[pageNumber](b)
-	)
-	if opt != nil {
-		opts = *opt
+	var content, opt = m.Pages[pageNumber](b)
+	if opt == nil {
+		opt = new(EditOptions)
 	}
 
 	keyboard := opts.ReplyMarkup.InlineKeyboard
@@ -143,42 +140,9 @@ func (m Menu) genButtons(trigger string, pageNumber int) (btnRow []echotron.Inli
 	return
 }
 
-type PageOptions = echotron.MessageTextOptions
-
 // StaticPage returns a MenuPage that will return always the same output
-func StaticPage(content string, opt *PageOptions) MenuPage {
-	return func(*robot.Bot) (string, *echotron.MessageTextOptions) {
+func StaticPage(content string, opt *EditOptions) MenuPage {
+	return func(*robot.Bot) (string, *EditOptions) {
 		return content, opt
 	}
-}
-
-func checkPageOpt(opt *PageOptions) *PageOptions {
-	if opt == nil {
-		opt = new(echotron.MessageTextOptions)
-	}
-	return opt
-}
-
-func ParseModeOpt(opt *PageOptions, parseMode echotron.ParseMode) *PageOptions {
-	opt = checkPageOpt(opt)
-	opt.ParseMode = parseMode
-	return opt
-}
-
-func ReplyMarkupOpt(opt *PageOptions, keyboard [][]InlineButton) *PageOptions {
-	opt = checkPageOpt(opt)
-	opt.ReplyMarkup = InlineKeyboard(keyboard)
-	return opt
-}
-
-func GenReplyMarkupOpt(opt *PageOptions, columns int, fromList ...InlineButton) *PageOptions {
-	opt = checkPageOpt(opt)
-	opt.ReplyMarkup = GenInlineKeyboard(columns, fromList...)
-	return opt
-}
-
-func DisableWebPagePreview(opt *PageOptions, disable bool) *PageOptions {
-	opt = checkPageOpt(opt)
-	opt.DisableWebPagePreview = disable
-	return opt
 }
