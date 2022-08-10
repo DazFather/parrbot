@@ -19,7 +19,7 @@ func main() {
 		},
 		{Trigger: "/info", ReplyAt: message.CALLBACK_QUERY, CallFunc: infoHandler},
 		// UseMenu method will generate the needed command for the using the menu
-		helpHandler.UseMenu("Help menu", "/help"),
+		tgui.UseMenu(helpHandler, "/help", "Help menu"),
 	}
 	// Make the bot alive
 	robot.Start(commandList)
@@ -45,8 +45,8 @@ func infoHandler(bot *robot.Bot, update *message.Update) message.Any {
 }
 
 // this is a Menu, is composed by varius pages that you can navigate using previous, close and next buttons
-var helpHandler = tgui.Menu{
-	Pages: []tgui.MenuPage{
+var helpHandler = &tgui.PagedMenu{
+	Pages: []tgui.Page{
 		// Page 1 - StaticPage is a page that show always the same values
 		tgui.StaticPage("No one is gonna help you", nil),
 		// Page 2 - Normal pages allows you to interact with the bot for real - time results
