@@ -1,6 +1,10 @@
 package tgui // TeleGram User Interface or Toolkit for Graphical User Interface
 
-import "github.com/NicoNex/echotron/v3"
+import (
+	"strings"
+
+	"github.com/NicoNex/echotron/v3"
+)
 
 // InlineButton is a shorter way to indicate an echotron.InlineKeyboardButton
 type InlineButton = echotron.InlineKeyboardButton
@@ -65,4 +69,17 @@ func Arrange[AnyButton InlineButton | KeyButton | InlineMenuItem](columns int, f
 // WARNING: Deprecated
 func GenInlineKeyboard(columns int, fromList ...InlineButton) echotron.InlineKeyboardMarkup {
 	return InlineKeyboard(Arrange(columns, fromList...))
+}
+
+// InlineCaller creates an inline button that will call the trigger-related command
+func InlineCaller(caption, trigger string, payload ...string) InlineButton {
+	if len(payload) > 0 {
+		trigger += " " + strings.Join(payload, " ")
+	}
+	return InlineButton{Text: caption, CallbackData: trigger}
+}
+
+// Wrap anything into a slice of the same type. Expecially useful when dealing with buttons
+func Wrap[T any](elem T) []T {
+	return []T{elem}
 }

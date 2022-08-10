@@ -222,24 +222,23 @@ func (m *PagedMenu) Show(page Page, b *robot.Bot, u *message.Update) error {
 func (m PagedMenu) genButtons() (btnRow []InlineButton) {
 	// Previous Button
 	if m.current > 0 {
-		btnRow = append(btnRow, InlineButton{
-			Text:         strings.ReplaceAll(m.PreviousCaption, "[INDEX]", strconv.Itoa(m.current)),
-			CallbackData: m.trigger + " " + strconv.Itoa(m.current-1),
-		})
+		btnRow = append(btnRow, InlineCaller(
+			strings.ReplaceAll(m.PreviousCaption, "[INDEX]", strconv.Itoa(m.current)),
+			m.trigger,
+			strconv.Itoa(m.current-1),
+		))
 	}
 
 	// Close Button
-	btnRow = append(btnRow, InlineButton{
-		Text:         m.CloseCaption,
-		CallbackData: m.trigger + " x",
-	})
+	btnRow = append(btnRow, InlineCaller(m.CloseCaption, m.trigger, "x"))
 
 	// Next Button
 	if m.current < len(m.Pages)-1 {
-		btnRow = append(btnRow, InlineButton{
-			Text:         strings.ReplaceAll(m.NextCaption, "[INDEX]", strconv.Itoa(m.current+2)),
-			CallbackData: m.trigger + " " + strconv.Itoa(m.current+1),
-		})
+		btnRow = append(btnRow, InlineCaller(
+			strings.ReplaceAll(m.NextCaption, "[INDEX]", strconv.Itoa(m.current+2)),
+			m.trigger,
+			strconv.Itoa(m.current+1),
+		))
 	}
 	return
 }
@@ -370,18 +369,13 @@ func (i InlineMenuItem) genKeyboard(trigger, backCaption string) (keyboard [][]I
 	for i, menuRow := range i.Children {
 		row := make([]InlineButton, len(menuRow))
 		for j, item := range menuRow {
-			row[j] = InlineButton{
-				Text:         item.Caption,
-				CallbackData: trigger + " " + strconv.Itoa(i) + " " + strconv.Itoa(j),
-			}
+			row[j] = InlineCaller(item.Caption, trigger, strconv.Itoa(i), strconv.Itoa(j))
 		}
 		keyboard[i] = row
 	}
 
 	if i.parent != nil {
-		keyboard = append(keyboard, []InlineButton{
-			{Text: backCaption, CallbackData: trigger + " back"},
-		})
+		keyboard = append(keyboard, Wrap(InlineCaller(backCaption, trigger, "back")))
 	}
 
 	return
