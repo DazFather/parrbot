@@ -30,7 +30,10 @@ func ShowMessage(u message.Update, text string, opt *EditOptions) (sent *message
 	return nil, errors.New("Invalid given update")
 }
 
-// Menu represents a generic graphical menu introduced by this package (ex. PagedMenu)
+/* --- Menu --- */
+
+// Menu represents a generic graphical menu introduced by this package (ex. PagedMenu, InlineMenu)
+// All menus can be triggered by both a MESSAGE and a CALLBACK_QUERY.
 type Menu interface {
 	// Initialize the menu before the robot.CommandFunc is created
 	initialize(trigger string)
@@ -139,11 +142,10 @@ func StaticPage(content string, pageOption *EditOptions) Page {
 	}
 }
 
-
 /* --- Paged Menu --- */
 
-// PagedMenu is a collection of messages that can be seen by pressing the related
-// button. The menu can be triggered by both a MESSAGE and a CALLBACK_QUERY.
+// PagedMenu is a collection of messages in a book-like structure. Every message
+// can be seen by pressing the next or previous button
 type PagedMenu struct {
 	// The collection of pages of the menu, required to work
 	Pages []Page
@@ -239,5 +241,148 @@ func (m PagedMenu) genButtons() (btnRow []InlineButton) {
 			CallbackData: m.trigger + " " + strconv.Itoa(m.current+1),
 		})
 	}
+	return
+}
+
+/* --- Inline Menu --- */
+
+// InlineMenu is a collection of messages in a tree-like structure. Every message
+// can be seen by pressing the related button.
+type InlineMenu struct {
+	// The main page of the menu required to work. All the other pages are nested inside
+	Home InlineMenuItem
+
+	// The caption of the inline button that allows user to go back to the previous page
+	BackCaption string
+
+	current *InlineMenuItem
+	trigger string
+	open    *message.Reference
+}
+
+// InlineMenuItem rapresent an element of the InlineMenu
+type InlineMenuItem struct {
+	// The caption of the inline button that when pressed will show Page
+	Caption string
+
+	// The actual page that will be shown
+	Page Page
+
+	// The pages that will be seen as inline buttons on the bottom when Page will be shown
+	Children [][]InlineMenuItem
+
+	parent *InlineMenuItem
+}
+
+// initialize an InlineMenu setting BackCaption if not present, given trigger and current page
+func (m *InlineMenu) initialize(trigger string) {
+	if m.BackCaption == "" {
+		m.BackCaption = "🔙 Go back"
+	}
+	m.trigger = trigger
+	m.current = &m.Home
+}
+
+// SelectPrevious allows to get the parent page of the current and reset current.
+func (m *InlineMenu) SelectPrevious() *Page {
+	if m.current == nil || m.current.parent == nil {
+		return nil
+	}
+	current := m.current.parent
+	m.current = current
+	return &current.Page
+}
+
+// SelectHome allows to get the Home's Page and reset current
+func (m *InlineMenu) SelectHome() Page {
+	var home = &m.Home
+	m.current = home
+	return home.Page
+}
+
+// Select a page by it's indexes (row and column, converting them into integers) and reset current
+func (m *InlineMenu) Select(payload string) (*Page, error) {
+	if m.current == nil {
+		return nil, errors.New("Current page is not setted")
+	}
+
+	var (
+		values   []string = strings.Split(payload, " ")
+		row, col int
+		err      error
+		selected *InlineMenuItem
+	)
+
+	if len(values) != 2 {
+		return nil, errors.New("Indexes on payload must be 2")
+	}
+
+	row, err = strconv.Atoi(values[0])
+	if err != nil {
+		return nil, err
+	}
+
+	col, err = strconv.Atoi(values[1])
+	if err != nil {
+		return nil, err
+	}
+
+	if len(m.current.Children) <= row || len(m.current.Children[row]) <= col {
+		return nil, errors.New("Invalid indexes passed")
+	}
+
+	selected = &m.current.Children[row][col]
+	if selected == nil {
+		return nil, errors.New("Invalid page selected")
+	}
+
+	selected.parent = m.current
+	m.current = selected
+
+	return &selected.Page, nil
+}
+
+// Show a given page adding the buttons for it's Children
+func (m *InlineMenu) Show(page Page, b *robot.Bot, u *message.Update) error {
+	content, opt := page(b)
+	opt = InlineKbdOpt(opt, m.current.genKeyboard(m.trigger, m.BackCaption))
+
+	sent, err := ShowMessage(*u, content, opt)
+	if err != nil {
+		return err
+	}
+
+	if m.open == nil {
+		m.open = message.NewReference(sent)
+	} else if sent.ID != m.open.MessageID() {
+		err = m.open.Delete()
+		if err == nil {
+			m.open = message.NewReference(sent)
+		}
+	}
+	return nil
+}
+
+// genKeyboard generate the buttons for the selected item Children
+func (i InlineMenuItem) genKeyboard(trigger, backCaption string) (keyboard [][]InlineButton) {
+	keyboard = make([][]InlineButton, len(i.Children))
+
+	for i, menuRow := range i.Children {
+		row := make([]InlineButton, len(menuRow))
+		for j, item := range menuRow {
+			row[j] = InlineButton{
+				Text:         item.Caption,
+				CallbackData: trigger + " " + strconv.Itoa(i) + " " + strconv.Itoa(j),
+			}
+		}
+		keyboard[i] = row
+	}
+
+	if i.parent != nil {
+		keyboard = append(keyboard, []InlineButton{
+			{Text: backCaption, CallbackData: trigger + " back"},
+		})
+	}
+
 	return
 }
