@@ -6,22 +6,22 @@ import (
 
 type Reference struct {
 	messageID int
-	chatID int64
+	chatID    int64
 	echotron.MessageIDOptions
 }
 
-func NewReference (e editable) *Reference {
-    var (
-        msgID = e.extractID()
-        message = e.grabMessage()
-    )
-    if msgID == nil || message == nil || message.Chat == nil {
-        return nil
-    }
+func NewReference(e editable) *Reference {
+	var (
+		msgID   = e.extractID()
+		message = e.grabMessage()
+	)
+	if msgID == nil || message == nil || message.Chat == nil {
+		return nil
+	}
 
-    return &Reference{
-		messageID: message.ID,
-		chatID: message.Chat.ID,
+	return &Reference{
+		messageID:        message.ID,
+		chatID:           message.Chat.ID,
 		MessageIDOptions: *msgID,
 	}
 }

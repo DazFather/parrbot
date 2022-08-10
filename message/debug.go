@@ -3,8 +3,8 @@ package message
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/NicoNex/echotron/v3"
 )
@@ -20,7 +20,7 @@ func Log(chatID int64, any ...interface{}) {
 
 	// Parsing each data and add the result to the message text
 	for i, value := range any {
-		t := fmt.Sprint("\n<b>Data (", i, "):</b>\nString: <code>", strings.ReplaceAll(fmt.Sprint(value), "<nil>", "nil") , "</code>")
+		t := fmt.Sprint("\n<b>Data (", i, "):</b>\nString: <code>", strings.ReplaceAll(fmt.Sprint(value), "<nil>", "nil"), "</code>")
 		if data, e := json.MarshalIndent(value, "", "   "); e == nil {
 			message.Text += fmt.Sprint(t, "\nJSON:\n<code>", string(data), "</code>\n")
 		} else {

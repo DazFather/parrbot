@@ -2,7 +2,6 @@ package tgui // TeleGram User Interface or Toolkit for Graphical User Interface
 
 import "github.com/NicoNex/echotron/v3"
 
-
 // InlineButton is a shorter way to indicate an echotron.InlineKeyboardButton
 type InlineButton = echotron.InlineKeyboardButton
 
