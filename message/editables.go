@@ -15,29 +15,28 @@ type editable interface {
 type editFn func(echotron.MessageIDOptions) (echotron.APIResponseMessage, error)
 
 func edit(e editable, call editFn) (err error) {
-	var (
-		edited   *UpdateMessage
-		jsonData []byte
-		msgID    *echotron.MessageIDOptions
-	)
-
-	msgID = e.extractID()
+	var msgID = e.extractID()
 	if msgID == nil {
 		return errors.New("Invalid message or Id")
 	}
 
 	// Perform the edit and clearig the response
+	var edited *UpdateMessage
 	edited, err = clearResponse(call(*msgID))
 	if err != nil || edited != nil {
 		return
 	}
 
 	// Sync changes
-	jsonData, err = json.Marshal(*edited)
-	if err != nil {
-		return
+	if original := e.grabMessage(); original != nil {
+		var jsonData []byte
+		jsonData, err = json.Marshal(*edited)
+		if err == nil {
+			err = json.Unmarshal(jsonData, original)
+		}
 	}
-	return json.Unmarshal(jsonData, e.grabMessage())
+
+	return
 }
 
 func editText(e editable, text string, opts *echotron.MessageTextOptions) error {
@@ -77,7 +76,7 @@ func delete(e editable) error {
 	if message == nil {
 		return ResponseError{"Parr(B)ot", 1, "Unable to retreive message"}
 	}
-	if message.Chat != nil {
+	if message.Chat == nil {
 		return ResponseError{"Parr(B)ot", 1, "Invalid chat ID"}
 	}
 
@@ -146,4 +145,14 @@ func (update Update) extractID() (msgIDOpt *echotron.MessageIDOptions) {
 		msgIDOpt = msg.extractID()
 	}
 	return
+}
+
+/* --- Implementing Reference --- */
+
+func (ref Reference) grabMessage() *UpdateMessage {
+	return nil
+}
+
+func (ref Reference) extractID() (msgIDOpt *echotron.MessageIDOptions) {
+	return &ref.MessageIDOptions
 }
