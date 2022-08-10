@@ -50,17 +50,17 @@ var helpHandler = tgui.Menu{
 		// Page 1 - StaticPage is a page that show always the same values
 		tgui.StaticPage("No one is gonna help you", nil),
 		// Page 2 - Normal pages allows you to interact with the bot for real - time results
-		func(b *robot.Bot) (string, *tgui.PageOptions) {
+		func(b *robot.Bot) (string, *tgui.EditOptions) {
 			res, _ := message.GetAPI().GetChat(b.ChatID)
 			return "Just kidding" + res.Result.FirstName, nil
 		},
 		// Page 3 - You can always attach options like a custom keyboard
 		tgui.StaticPage(
 			"Feel free to contact me on Telegram at @DazFather ❤️",
-			tgui.GenReplyMarkupOpt(nil, 2, []tgui.InlineButton{
+			tgui.InlineKbdOpt(nil, tgui.Arrange(2, []tgui.InlineButton{
 				{Text: "Contact developer", URL: "t.me/DazFather"},
 				{Text: "Echotron group", URL: "t.me/echotron"},
-			}...),
+			}...)),
 		),
 	},
 	// You can also overrite default caption for buttons using CloseCaption, PreviousCaption and...
