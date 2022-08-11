@@ -2,7 +2,6 @@ package robot
 
 import (
 	"errors"
-	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -11,48 +10,44 @@ import (
 // TOKEN is the Telegram API bot's token.
 var TOKEN string
 
-// LoadToken get the Telegram API bot's token and put it into the global variable "TOKEN"
-func LoadToken() {
-	if rawToken, err := GrabToken(); err != nil {
-		log.Fatal(err)
-	} else {
-		TOKEN = rawToken
-	}
-}
+// LoadToken grabs the token from the command line arguments (os.Args) when next
+// to executable name ex. `.\Parrbot.exe <TOKEN>`, or if token is inside a file
+// and the name is followed by --readfrom and the file path, ex:
+// .\DuelBot.exe --readfrom myfile.txt
+func LoadToken() (err error) {
+	var token string
 
-// GrabToken grab the token from using the command line arguments (os.Args)
-// put the token next to the executable file name on the console or
-// use put readfrom followed by the file in witch there is the token as example:
-// .\DuelBot.exe --readfrom mytoken.txt
-func GrabToken() (token string, err error) {
 	switch len(os.Args) {
 	case 1:
-		return "", errors.New("Missing TOKEN value")
+		return errors.New("Missing TOKEN value")
 
 	case 2:
 		token = os.Args[1]
 
 	case 3:
 		if strings.ToUpper(os.Args[1]) != "--READFROM" {
-			return "", errors.New("Invalid format")
+			return errors.New("Invalid format")
 		}
 		content, err := os.ReadFile(os.Args[2])
 		if err != nil {
-			return "", err
+			return err
 		}
 		token = strings.TrimSpace(string(content))
 
 	default:
-		return "", errors.New("Too many arguments")
+		return errors.New("Too many arguments")
 	}
 
 	err = validateToken(token)
+	if err == nil {
+		TOKEN = token
+	}
 	return
 }
 
 // validateToken tries to detect if a string is a vaild token
 func validateToken(token string) error {
-	match, err := regexp.MatchString(`\d+:[\w\-]+`, token)
+	var match, err = regexp.MatchString(`\d+:[\w\-]+`, token)
 	if err != nil {
 		return err
 	}

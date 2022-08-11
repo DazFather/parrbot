@@ -23,8 +23,8 @@ type CommandFunc func(*Bot, *message.Update) message.Any
 // commands is where all the command will be stored
 var commands map[message.UpdateType]map[string]CommandFunc
 
-// Divider divide the command list and cast it in a form that is more efficenct
-func Divider(commandList []Command) (splitted map[message.UpdateType]map[string]CommandFunc) {
+// divide the command list and cast it in a form that is more efficenct
+func divide(commandList []Command) (splitted map[message.UpdateType]map[string]CommandFunc) {
 	splitted = make(map[message.UpdateType]map[string]CommandFunc, 0)
 
 	var cmdMenu []echotron.BotCommand
@@ -115,5 +115,5 @@ func extractTrigger(caption string) string {
 // LoadCommands saves the given commandList in a form that is more efficenct
 func LoadCommands(commandList []Command) {
 	commands = make(map[message.UpdateType]map[string]CommandFunc, 0)
-	commands = Divider(commandList)
+	commands = divide(commandList)
 }
