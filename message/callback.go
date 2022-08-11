@@ -5,7 +5,8 @@ import (
 )
 
 // CallbackQuery is the Parr(b)ot rapresentation the echotron.CallbackQuery,
-// the difference is that it have the custom UpdateMessage instead of echotron.Message type
+// the difference is that it have the custom *UpdateMessage instead of *echotron.Message
+// type for Message field. CallbackQuery implements editable interface
 type CallbackQuery struct {
 	ID              string         `json:"id"`
 	From            *echotron.User `json:"from"`

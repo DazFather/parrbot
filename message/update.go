@@ -11,6 +11,7 @@ import (
 // is that it have the custom UpdateMessage (declared on inside the "incoming.go"
 // file of the same packages) instead of echotron.Message type.
 // You can cast a echotron.Update to a Update using the CastUpdate function
+// Update implements editable interface
 type Update struct {
 	ID                 int                          `json:"update_id"`
 	Message            *UpdateMessage               `json:"parrbot_message,omitempty"`
@@ -164,10 +165,12 @@ func CastUpdate(original *echotron.Update) (update *Update) {
 	return
 }
 
+// FromMessage gets the original message contain in the update if present
 func (u Update) FromMessage() (msg *UpdateMessage) {
 	return u.grabMessage()
 }
 
+// Deletes the original message contain in the update if present
 func (u Update) DeleteMessage() error {
 	return delete(u)
 }

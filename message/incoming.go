@@ -7,11 +7,11 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
-// UpdateMessage is the custom type for incoming or just sent message (of any type)
-// tips: Use the json naming to refer to the official Telegram documentation
-// available at: https://core.telegram.org/bots/api#message
-// In the rare cases where the json string start with "parrbot_" then
-// is not a copy-paste of the response
+// UpdateMessage is the custom type for incoming or just sent message (of any
+// type). It implements editable interface. Tips: Use the json- tags naming to
+// refer to the official Telegram documentation available at:
+// https://core.telegram.org/bots/api#message In the rare cases where the json
+// string start with "parrbot_" then is not a copy-paste of the response
 type UpdateMessage struct {
 	// Normal Telegram / Echotron resonse
 	ID              int                            `json:"message_id"`
