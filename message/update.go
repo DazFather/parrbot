@@ -32,10 +32,9 @@ type UpdateType uint16
 
 // These are all the possible types of Update. On the side the binary representation
 // Each one can be used as a flag into the "ReplyAt" field of a Command on the
-// command list
-// tips: You can even sum them to specify that the command will be executed on
-//       reply at for example MESSAGE + CHANNEL_POST (normal written messages)
-//       and channel posts. If you want all, you can use ANY
+// command list. Tips: You can even sum them to specify that the command will be
+// executed onreply at for example MESSAGE + CHANNEL_POST (normal written messages
+// and channel posts. If you want all, you can use ANY
 const (
 	MESSAGE              UpdateType = 1 << iota // 000000000001
 	EDITED_MESSAGE                              // 000000000010
