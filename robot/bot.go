@@ -13,7 +13,6 @@ var dsp *echotron.Dispatcher
 
 // Bot structure
 type Bot struct {
-	//CommandList []Command
 	ChatID int64 // ChatID of the user who is using the bot on a private chat
 }
 
