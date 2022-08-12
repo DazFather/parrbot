@@ -205,16 +205,20 @@ func (m *PagedMenu) Show(page Page, b *robot.Bot, u *message.Update) error {
 	var (
 		keyboard     [][]InlineButton
 		content, opt = page(b)
+		pageOpt      *EditOptions
 	)
 
 	if opt != nil {
+		pageOpt = new(EditOptions)
+		*pageOpt = *opt
 		keyboard = opt.ReplyMarkup.InlineKeyboard
 	}
+
 	if size := len(keyboard); size == 0 || !strings.HasPrefix(keyboard[size-1][0].CallbackData, m.trigger+" ") {
 		keyboard = append(keyboard, m.genButtons())
 	}
 
-	_, err := ShowMessage(*u, content, InlineKbdOpt(opt, keyboard))
+	_, err := ShowMessage(*u, content, InlineKbdOpt(pageOpt, keyboard))
 	return err
 }
 
