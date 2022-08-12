@@ -52,7 +52,7 @@ var helpHandler = &tgui.PagedMenu{
 		// Page 2 - Normal pages allows you to interact with the bot for real - time results
 		func(b *robot.Bot) (string, *tgui.EditOptions) {
 			res, _ := message.GetAPI().GetChat(b.ChatID)
-			return "Just kidding" + res.Result.FirstName, nil
+			return "Just kidding " + res.Result.FirstName, nil
 		},
 		// Page 3 - You can always attach options like a custom keyboard
 		tgui.StaticPage(
