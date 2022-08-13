@@ -50,9 +50,8 @@ var helpHandler = &tgui.PagedMenu{
 		// Page 1 - StaticPage is a page that show always the same values
 		tgui.StaticPage("No one is gonna help you", nil),
 		// Page 2 - Normal pages allows you to interact with the bot for real - time results
-		func(b *robot.Bot) (string, *tgui.EditOptions) {
-			res, _ := message.GetAPI().GetChat(b.ChatID)
-			return "Just kidding " + res.Result.FirstName, nil
+		func(b *robot.Bot, u *message.Update) (string, *tgui.EditOptions) {
+			return "Just kidding " + u.FromMessage().Chat.FirstName, nil
 		},
 		// Page 3 - You can always attach options like a custom keyboard
 		tgui.StaticPage(

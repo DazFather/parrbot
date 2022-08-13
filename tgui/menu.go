@@ -53,7 +53,7 @@ type Menu interface {
 }
 
 // Page is a function that will return the content that will be shown when a user request that page of the Menu
-type Page func(b *robot.Bot) (content string, opts *EditOptions)
+type Page func(bot *robot.Bot, update *message.Update) (content string, opts *EditOptions)
 
 // UseMenu allows to generate the robot.Command from a given menu to make it work
 func UseMenu(menu Menu, trigger, description string) robot.Command {
@@ -137,7 +137,7 @@ func collapse(update *message.Update, message string) {
 
 // StaticPage returns a Page that will return always the same output
 func StaticPage(content string, pageOption *EditOptions) Page {
-	return func(*robot.Bot) (string, *EditOptions) {
+	return func(*robot.Bot, *message.Update) (string, *EditOptions) {
 		return content, pageOption
 	}
 }
@@ -204,7 +204,7 @@ func (m *PagedMenu) Select(pageIndex string) (*Page, error) {
 func (m *PagedMenu) Show(page Page, b *robot.Bot, u *message.Update) error {
 	var (
 		keyboard     [][]InlineButton
-		content, opt = page(b)
+		content, opt = page(b, u)
 		pageOpt      *EditOptions
 	)
 
@@ -347,7 +347,7 @@ func (m *InlineMenu) Select(payload string) (*Page, error) {
 
 // Show a given page adding the buttons for it's Children
 func (m *InlineMenu) Show(page Page, b *robot.Bot, u *message.Update) error {
-	content, opt := page(b)
+	content, opt := page(b, u)
 	opt = InlineKbdOpt(opt, m.current.genKeyboard(m.trigger, m.BackCaption))
 
 	sent, err := ShowMessage(*u, content, opt)
