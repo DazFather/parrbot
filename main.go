@@ -57,10 +57,10 @@ var helpHandler = &tgui.PagedMenu{
 		// Page 3 - You can always attach options like a custom keyboard
 		tgui.StaticPage(
 			"Feel free to contact me on Telegram at @DazFather ❤️",
-			tgui.InlineKbdOpt(nil, tgui.Arrange(2, []tgui.InlineButton{
-				{Text: "Contact developer", URL: "t.me/DazFather"},
-				{Text: "Echotron group", URL: "t.me/echotron"},
-			}...)),
+			tgui.InlineKbdOpt(nil, tgui.Arrange(2,
+				tgui.InlineLink("Contact developer", "t.me/DazFather"),
+				tgui.InlineLink("Echotron group", "t.me/echotron"),
+			)),
 		),
 	},
 	// You can also overrite default caption for buttons using CloseCaption, PreviousCaption and...

@@ -79,6 +79,11 @@ func InlineCaller(caption, trigger string, payload ...string) InlineButton {
 	return InlineButton{Text: caption, CallbackData: trigger}
 }
 
+// InlineLink creates an inline button that will take the user to a specified link or chat
+func InlineLink(caption, link string) InlineButton {
+	return InlineButton{Text: caption, URL: link}
+}
+
 // Wrap anything into a slice of the same type. Expecially useful when dealing with buttons
 func Wrap[T any](elem T) []T {
 	return []T{elem}
