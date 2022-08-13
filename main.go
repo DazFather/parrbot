@@ -13,8 +13,8 @@ func main() {
 	var commandList = []robot.Command{
 		{
 			Description: "Start the bot",                          // Text that will appear on bot's menu if ReplyAt contains message.MESSAGE
-			Trigger:     "/start",                                 // Trigger that will execute the CallFunc (first word)
-			ReplyAt:     message.MESSAGE + message.CALLBACK_QUERY, // Wwhat type of update CallFunc is avaiable (you can combine more types using +)
+			Trigger:     "/start",                                 // Trigger that will execute the CallFunc (the first word, MUST start with '/')
+			ReplyAt:     message.MESSAGE + message.CALLBACK_QUERY, // What type of update CallFunc is avaiable (you can combine more types using +)
 			CallFunc:    startHandler,                             // The function that is going to be executed
 		},
 		{Trigger: "/info", ReplyAt: message.CALLBACK_QUERY, CallFunc: infoHandler},
