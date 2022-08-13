@@ -32,13 +32,14 @@ func Log(chatID int64, any ...interface{}) {
 	message.ClipInlineKeyboard([][]echotron.InlineKeyboardButton{
 		{
 			{Text: "📖 Parr(B)ot doc", URL: "https://pkg.go.dev/github.com/DazFather/parrbot"},
-			{Text: "🧑‍💻 Parr(B)ot dev", URL: "t.me/DazFather"}
+			{Text: "🧑‍💻 Parr(B)ot dev", URL: "t.me/DazFather"},
+		},
 		{
 			{Text: "📖 Echotron doc", URL: "https://pkg.go.dev/github.com/NicoNex/echotron/v3"},
 			{Text: "👥 Echotron group", URL: "t.me/echotron"},
 		},
 		{{Text: "📖 Telegram Bot API doc", URL: "https://core.telegram.org/bots/api"}},
-	}})
+	})
 
 	// Send the message to the specified user
 	message.Send(chatID)
