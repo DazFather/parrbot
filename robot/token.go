@@ -7,9 +7,6 @@ import (
 	"strings"
 )
 
-// TOKEN is the Telegram API bot's token.
-var TOKEN string
-
 // retrieveToken grabs the token from the command line arguments (os.Args) when
 // next to executable name ex. `.\Parrbot.exe <TOKEN>`, or if token is inside a
 // file and the name is followed by --readfrom and the file path, ex:
