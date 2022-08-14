@@ -19,7 +19,9 @@ type Bot struct {
 // Creates a new bot - will be called when a user first start the bot
 func newBot(chatID int64) echotron.Bot {
 	bot := &Bot{chatID}
-	go bot.selfDestruct(time.After(time.Hour * 2))
+	if duration := Config.DeleteSessionTimer; duration != 0 {
+		go bot.selfDestruct(time.After(duration))
+	}
 	return bot
 }
 
