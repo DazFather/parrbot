@@ -42,10 +42,19 @@ func (b *Bot) Update(u *echotron.Update) {
 	}
 }
 
-// Start give life to your amazing root parrot
+// Start give life to your amazing robo-parrot
 func Start(commandList []Command) {
 	// Initialization
-	LoadToken()
+	if TOKEN == "" {
+		token, err := retrieveToken()
+		if err != nil {
+			log.Fatal(err)
+		}
+		TOKEN = token
+	}
+	if err := validateToken(TOKEN); err != nil {
+		log.Fatal(err)
+	}
 	message.LoadAPI(TOKEN)
 	LoadCommands(commandList)
 	dsp = echotron.NewDispatcher(TOKEN, newBot)
