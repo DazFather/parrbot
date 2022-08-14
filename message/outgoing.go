@@ -9,7 +9,10 @@ import (
 // api is used by echotron library to send request to Telegram
 var api echotron.API
 
-// LoadAPI sets the api to a new value (used in the initialization)
+// LoadAPI resets the api to a new value using given token.
+// Keep in mind that both api and token will be already set douring robot.Start and
+// if you don't want to use program's argument, you can use robot.Config.SetAPIToken
+// intead. You are probably NOT going to need this function
 func LoadAPI(token string) {
 	api = echotron.NewAPI(token)
 }

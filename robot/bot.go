@@ -48,8 +48,8 @@ func (b *Bot) Update(u *echotron.Update) {
 func Start(commandList []Command) {
 	// Initialization
 	if err := Config.init(); err != nil {
-        log.Fatal("Config error: ", err)
-    }
+		log.Fatal("Config error: ", err)
+	}
 	LoadCommands(commandList)
 	dsp = echotron.NewDispatcher(Config.token, newBot)
 

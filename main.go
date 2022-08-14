@@ -1,5 +1,7 @@
-// THE FOLLOWING IS AN EXAMPLE OF A WORKING BOT
-// API TOKEN can be passed as program's argument or using --READFROM <filepath> (case insensitive)
+// THE FOLLOWING IS AN EXAMPLE OF A WORKING BOT.
+// API TOKEN can be passed as program's argument directly: `<executable> <TOKEN>`,
+// or using a file that contains the token: `<executable> --READFROM <filepath>` (case insensitive)
+// Another way is to pass it as argument to the function: robot.Config.SetAPIToken
 package main
 
 import (
