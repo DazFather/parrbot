@@ -129,11 +129,7 @@ func (message *UpdateMessage) EditCaption(opts *echotron.MessageCaptionOptions) 
 	return editCaption(message, opts)
 }
 
-// Delete the given message on the original chat and memory (setting it to nil)
-func (message *UpdateMessage) Delete() error {
-	err := delete(message)
-	if err != nil {
-		message = nil
-	}
-	return err
+// Delete the given message on the original chat (given message will not sync)
+func (message UpdateMessage) Delete() error {
+	return delete(message)
 }

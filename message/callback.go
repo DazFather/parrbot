@@ -60,6 +60,7 @@ func (callback CallbackQuery) EditCaption(opts *echotron.MessageCaptionOptions) 
 	return editCaption(callback, opts)
 }
 
+// Delete  is a method that allows to delete the original message
 func (callback CallbackQuery) Delete() error {
 	return delete(callback)
 }

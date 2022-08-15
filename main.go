@@ -16,7 +16,7 @@ func main() {
 		{
 			Description: "Start the bot",                          // Text that will appear on bot's menu if ReplyAt contains message.MESSAGE
 			Trigger:     "/start",                                 // Trigger that will execute the CallFunc (the first word, MUST start with '/')
-			ReplyAt:     message.MESSAGE + message.CALLBACK_QUERY, // What type of update CallFunc is avaiable (you can combine more types using +)
+			ReplyAt:     message.MESSAGE + message.CALLBACK_QUERY, // What type of update CallFunc is available (you can combine more types using +)
 			CallFunc:    startHandler,                             // The function that is going to be executed
 		},
 		{Trigger: "/info", ReplyAt: message.CALLBACK_QUERY, CallFunc: infoHandler},

@@ -74,7 +74,7 @@ func editCaption(e editable, opts *echotron.MessageCaptionOptions) error {
 func delete(e editable) error {
 	message := e.grabMessage()
 	if message == nil {
-		return ResponseError{"Parr(B)ot", 1, "Unable to retreive message"}
+		return ResponseError{"Parr(B)ot", 1, "Unable to retrieve message"}
 	}
 	if message.Chat == nil {
 		return ResponseError{"Parr(B)ot", 1, "Invalid chat ID"}
