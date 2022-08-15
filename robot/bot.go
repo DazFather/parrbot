@@ -19,7 +19,9 @@ type Bot struct {
 // Creates a new bot - will be called when a user first start the bot
 func newBot(chatID int64) echotron.Bot {
 	bot := &Bot{chatID}
-	go bot.selfDestruct(time.After(time.Hour * 2))
+	if duration := Config.DeleteSessionTimer; duration != 0 {
+		go bot.selfDestruct(time.After(duration))
+	}
 	return bot
 }
 
@@ -42,13 +44,14 @@ func (b *Bot) Update(u *echotron.Update) {
 	}
 }
 
-// Start give life to your amazing root parrot
+// Start give life to your amazing robo-parrot
 func Start(commandList []Command) {
 	// Initialization
-	LoadToken()
-	message.LoadAPI(TOKEN)
+	if err := Config.init(); err != nil {
+		log.Fatal("Config error: ", err)
+	}
 	LoadCommands(commandList)
-	dsp = echotron.NewDispatcher(TOKEN, newBot)
+	dsp = echotron.NewDispatcher(Config.token, newBot)
 
 	// Put life into the bot
 	log.Println(dsp.Poll())

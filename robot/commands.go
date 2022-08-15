@@ -53,7 +53,7 @@ func divide(commandList []Command) (splitted map[message.UpdateType]map[string]C
 		return
 	}
 
-	res, err := message.GetAPI().SetMyCommands(nil, cmdMenu...)
+	res, err := message.API().SetMyCommands(nil, cmdMenu...)
 	if err != nil {
 		log.Fatal("SetMyCommands error: ", err)
 	}
