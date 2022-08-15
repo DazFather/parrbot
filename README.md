@@ -56,3 +56,86 @@ Parr(B)ot makes massively use of the [echotron library](https://pkg.go.dev/githu
 
  - **Step 3. Make it fly!** - After building your project, run the bot and use as argument the API TOKEN, or save it on a _".txt"_ file and use `--readfrom` followed by the file path.
 > You can get the Telegram's Bot API TOKEN by creating a bot using [@BotFather](https://t.me/BotFather)
+
+
+## Example
+
+**Hello world** - A simple bot that send 'Hello World!' when user send '/start' to it in a private chat.
+The bot will also have to create the command interface for Telegram
+
+```golang
+// PARR(B)OT VERSION
+package main
+
+import (
+    "github.com/DazFather/parrbot/message" // (Core) Incoming / Outgoing message-related things
+    "github.com/DazFather/parrbot/robot"   // (Core) Parr(B)ot core functionality
+)
+
+func main() {
+    robot.Start(robot.Command{{       // start the bot with the following command
+        Description: "Start the bot", // command's description that will appear on the menu
+        Trigger:     "/start",        // text that will trigger the command
+        ReplyAt:     message.MESSAGE, // this command will only reply to normal messages
+        CallFunc:    func (bot *robot.Bot, update *message.Update) message.Any { // when triggered call this function
+            return message.Text{"Hello World", nil} // ...that returns a textual message containing "Hello World"
+        },
+    })
+}
+```
+
+```golang
+// VANILLA ECHOTRON VERSION
+package main
+
+import (
+	"log"
+	"time"
+
+	"github.com/NicoNex/echotron/v3"
+)
+
+type bot struct {
+	chatID int64
+}
+
+const token = "YOUR TELEGRAM TOKEN"
+
+var (
+    dsp *echotron.Dispatcher
+    api echotron.API
+)
+
+func newBot(chatID int64) echotron.Bot {
+	bot := &bot{chatID}
+	go bot.selfDestruct(time.After(time.Hour * 2))
+	return bot
+}
+
+func (b *bot) selfDestruct(timech <-chan time.Time) {
+	<-timech
+	dsp.DelSession(b.chatID)
+}
+
+func (b *bot) Update(update *echotron.Update) {
+	if update.Message.Text == "/start" {
+		api.SendMessage("Hello world", b.chatID, nil)
+	}
+}
+
+func main() {
+    api = echotron.NewAPI(token)
+    dsp = echotron.NewDispatcher(token, newBot)
+
+    api.SetMyCommands(nil, echotron.BotCommand{
+        Command:     "/start",
+        Description: "Start the bot",
+    })
+
+	log.Println(dsp.Poll())
+}
+```
+
+---
+
+You can find a more detailed example on [main.go](./main.go) file or by visiting a complete bot made by other users in the [used by section](https://github.com/DazFather/parrbot/network/dependents?package_id=UGFja2FnZS0yOTE2NzIwMTcy)
