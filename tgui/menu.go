@@ -12,26 +12,6 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
-// ShowMessage allows to show a text message editing the incoming in case of CALLBACK_QUERY or sending a new one
-func ShowMessage(u message.Update, text string, opt *EditOptions) (sent *message.UpdateMessage, err error) {
-	if callback := u.CallbackQuery; callback != nil {
-		err = callback.EditText(text, opt)
-		if err == nil {
-			_, err = callback.Answer(nil)
-			sent = callback.Message
-		}
-		return
-	}
-
-	if original := u.FromMessage(); original != nil && original.Chat != nil {
-		return message.Text{text, ToMessageOptions(opt)}.Send(original.Chat.ID)
-	}
-
-	return nil, errors.New("Invalid given update")
-}
-
-/* --- Menu --- */
-
 // Menu represents a generic graphical menu introduced by this package (ex. PagedMenu, InlineMenu)
 // All menus can be triggered by both a MESSAGE and a CALLBACK_QUERY.
 type Menu interface {
