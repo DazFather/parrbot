@@ -84,7 +84,7 @@ func InlineLink(caption, link string) InlineButton {
 	return InlineButton{Text: caption, URL: link}
 }
 
-// Wrap anything into a slice of the same type. Expecially useful when dealing with buttons
+// Wrap anything into a slice of the same type. Especially useful when dealing with buttons
 func Wrap[T any](elem T) []T {
 	return []T{elem}
 }
