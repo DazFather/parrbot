@@ -24,7 +24,7 @@ func main() {
 		tgui.UseMenu(helpHandler, "/help", "Help menu"),
 	}
 	// Make the bot alive
-	robot.Start(commandList)
+	robot.Start(commandList...)
 }
 
 // every robot.CommandFunc can return a new message to be sent, to better organize your code

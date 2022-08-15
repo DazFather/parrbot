@@ -45,7 +45,7 @@ func (b *Bot) Update(u *echotron.Update) {
 }
 
 // Start give life to your amazing robo-parrot
-func Start(commandList []Command) {
+func Start(commandList ...Command) {
 	// Initialization
 	if err := Config.init(); err != nil {
 		log.Fatal("Config error: ", err)
