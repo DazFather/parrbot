@@ -44,7 +44,12 @@ func (b *Bot) Update(u *echotron.Update) {
 	}
 }
 
-// Start give life to your amazing robo-parrot
+// Start give life to your amazing robo-parrot. It accepts the commands that the
+// bot will need to handle. This function will also load all configuartion available
+// int the Confing variable, so if you want to change them use do it before you
+// call this function. Start will also stop the flow of execution (unless bot crash)
+// if any error happens it will be logged on screen
+This function will also load configurations and block the flow of execution until the bot crash
 func Start(commandList ...Command) {
 	// Initialization
 	if err := Config.init(); err != nil {
