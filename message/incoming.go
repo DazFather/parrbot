@@ -3,6 +3,7 @@ package message
 import (
 	"encoding/json"
 	"log"
+	"unicode/utf16"
 
 	"github.com/NicoNex/echotron/v3"
 )
@@ -132,4 +133,60 @@ func (message *UpdateMessage) EditCaption(opts *echotron.MessageCaptionOptions) 
 // Delete the given message on the original chat (given message will not sync)
 func (message UpdateMessage) Delete() error {
 	return delete(&message)
+}
+
+/* --- Handle echotron.MessageEntity --- */
+
+// EntityFilter is a function checks an entity, returning true if pass false otherwise
+type EntityFilter func(entity echotron.MessageEntity) bool
+
+// ExtractEntitiesOfType extracts the content of the Entities contained filtered by their type
+func (message UpdateMessage) ExtractEntitiesOfType(allowedTypes ...echotron.MessageEntityType) []string {
+	return message.ExtractEntities(FilterEntityByType(allowedTypes...))
+}
+
+// ExtractEntities extracts the content of the Entities contained inside given
+// message and filtered by given filter function
+func (message UpdateMessage) ExtractEntities(filter EntityFilter) (extracted []string) {
+	var text = stirngToUft16(message.Text)
+
+	for _, entity := range message.Entities {
+		if entity != nil && filter(*entity) {
+			extracted = append(extracted, grabEntityContent(text, *entity))
+		}
+	}
+	return
+}
+
+// FilterEntityByType generates an EntityFilter that will return true only if
+// entity's type match at least one of the given ones
+func FilterEntityByType(allowedTypes ...echotron.MessageEntityType) EntityFilter {
+	return func(entity echotron.MessageEntity) bool {
+		return contains(allowedTypes, entity.Type)
+	}
+}
+
+// StirngToUft16 encode a given string into Utf16 format
+func stirngToUft16(toEncode string) []uint16 {
+	return utf16.Encode([]rune(toEncode))
+}
+
+// Uft16ToStirng decode a given encoded text in Utf16 format into a string
+func uft16ToStirng(encodedText []uint16) string {
+	return string(utf16.Decode(encodedText))
+}
+
+// grabEntityContent extract the entity content from a given utf16-encoded text
+func grabEntityContent(uft16Text []uint16, entity echotron.MessageEntity) string {
+	return uft16ToStirng(uft16Text[entity.Offset : entity.Offset+entity.Length])
+}
+
+// contains checks if the value of given elem is present on the given list
+func contains[T comparable](list []T, elem T) bool {
+	for _, value := range list {
+		if value == elem {
+			return true
+		}
+	}
+	return false
 }
