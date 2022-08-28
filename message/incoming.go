@@ -130,6 +130,6 @@ func (message *UpdateMessage) EditCaption(opts *echotron.MessageCaptionOptions) 
 }
 
 // Delete the given message on the original chat (given message will not sync)
-func (message UpdateMessage) Delete() error {
+func (message *UpdateMessage) Delete() error {
 	return delete(message)
 }
