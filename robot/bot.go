@@ -16,7 +16,7 @@ type Bot struct {
 	ChatID int64 // ChatID of the user who is using the bot on a private chat
 }
 
-// Creates a new bot - will be called when a user first start the bot
+// newBot Creates a new bot - will be called when a user first start the bot
 func newBot(chatID int64) echotron.Bot {
 	bot := &Bot{chatID}
 	if duration := Config.DeleteSessionTimer; duration != 0 {
@@ -30,7 +30,7 @@ func (b *Bot) selfDestruct(timech <-chan time.Time) {
 	dsp.DelSession(b.ChatID)
 }
 
-// Update is used to manage the incoming inputs from Telegram
+// Update is used internally to manage the incoming inputs from Telegram
 func (b *Bot) Update(u *echotron.Update) {
 	var update = message.CastUpdate(u)
 
@@ -46,10 +46,9 @@ func (b *Bot) Update(u *echotron.Update) {
 
 // Start give life to your amazing robo-parrot. It accepts the commands that the
 // bot will need to handle. This function will also load all configuartion available
-// int the Confing variable, so if you want to change them use do it before you
-// call this function. Start will also stop the flow of execution (unless bot crash)
-// if any error happens it will be logged on screen
-// This function will also load configurations and block the flow of execution until the bot crash
+// int the Confing variable, so if you want to change them, do it before calling
+// this function. Start will also stop the flow of execution (unless bot crash)
+// if any error happens it will be logged on screen and progrm will terminate
 func Start(commandList ...Command) {
 	// Initialization
 	if err := Config.init(); err != nil {
