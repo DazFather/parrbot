@@ -13,7 +13,7 @@ import (
 // https://core.telegram.org/bots/api#message In the rare cases where the json
 // string start with "parrbot_" then is not a copy-paste of the response
 type UpdateMessage struct {
-	// Normal Telegram / Echotron resonse
+	// Normal Telegram / Echotron fields
 	ID              int                            `json:"message_id"`
 	From            *echotron.User                 `json:"from,omitempty"` // <nil> if channel
 	SenderChat      *echotron.Chat                 `json:"sender_chat,omitempty"`
