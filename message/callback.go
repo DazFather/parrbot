@@ -17,7 +17,28 @@ type CallbackQuery struct {
 	GameShortName   string         `json:"game_short_name,omitempty"`
 }
 
+// AnswerAlert allows to reply to a given callback with a _ notification.
+// The notification may be cached client-side by final user for cacheTime seconds
+// max: 3600s
+func (callback CallbackQuery) AnswerAlert(text string, cacheTime uint16) error {
+	return callback.Answer(&echotron.CallbackQueryOptions{
+		Text:      text,
+		CacheTime: int(cacheTime),
+		ShowAlert: true,
+	})
+}
 
+// AnswerToast allows to reply to a given callback with a _ notification.
+// The notification may be cached client-side by final user for cacheTime seconds
+// max: 3600s
+func (callback CallbackQuery) AnswerToast(text string, cacheTime uint16) error {
+	return callback.Answer(&echotron.CallbackQueryOptions{
+		Text:      text,
+		CacheTime: int(cacheTime),
+	})
+}
+
+// Answer allows to reply to a given callback using given options
 func (callback CallbackQuery) Answer(opts *echotron.CallbackQueryOptions) error {
 	return parseResponseError(api.AnswerCallbackQuery(callback.ID, opts))
 }

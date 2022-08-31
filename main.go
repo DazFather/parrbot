@@ -41,9 +41,10 @@ var startHandler robot.CommandFunc = func(bot *robot.Bot, update *message.Update
 
 // this is another valid robot.CommandFunc too (it just needs the right params)
 func infoHandler(bot *robot.Bot, update *message.Update) message.Any {
-	update.CallbackQuery.EditText("Made with ❤️ by @DazFather", nil)
-	update.CallbackQuery.Answer(nil)
-	return nil // You are not obligated to sent a message every time
+	var callback = update.CallbackQuery
+	callback.EditText("Made with ❤️ by @DazFather", nil)
+	callback.AnswerToast("Thanks for using me ❤️", 3600)
+	return nil // You are NOT obligated to sent a message every time
 }
 
 // this is a Menu, is composed by varius pages that you can navigate using previous, close and next buttons

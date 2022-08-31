@@ -69,3 +69,22 @@ func ToMessageOptions(opt *EditOptions) *echotron.MessageOptions {
 		DisableWebPagePreview: opt.DisableWebPagePreview,
 	}
 }
+
+// NewAlert generates the option needed to display an alert when answering a
+// callback using the Answer method of a CallbackQuery
+func NewAlert(text string, cacheTime uint16) *echotron.CallbackQueryOptions {
+	return &echotron.CallbackQueryOptions{
+		Text:      text,
+		CacheTime: int(cacheTime),
+		ShowAlert: true,
+	}
+}
+
+// NewToast generates the option needed to display an toast notification when
+// answering a callback using the Answer method of a CallbackQuery
+func NewToast(text string, cacheTime uint16) *echotron.CallbackQueryOptions {
+	return &echotron.CallbackQueryOptions{
+		Text:      text,
+		CacheTime: int(cacheTime),
+	}
+}
