@@ -35,14 +35,22 @@ func (err ResponseError) Error() string {
 	return fmt.Sprint("[", err.ErrorCode, "] ", err.From, ": ", err.Description)
 }
 
+func parseResponseError(res echotron.APIResponse, err error) *ResponseError {
+	if err != nil {
+		return &ResponseError{"Echotron", 1, err.Error()}
+	}
+	if base := res.Base(); !base.Ok {
+		return &ResponseError{"Telegram", base.ErrorCode, base.Description}
+	}
+	return nil
+}
+
 // clearResponse it clears the echotron.APIResponseMessage and returns the actual
 // message of type *UpdateMessage (casting it from Result),
 // and an error by checking both, the APIResponseBase and the echotron err
 func clearResponse(res echotron.APIResponseMessage, err error) (*UpdateMessage, error) {
-	if err != nil {
-		return nil, ResponseError{"Echotron", 1, err.Error()}
-	} else if !res.Ok {
-		return nil, ResponseError{"Telegram", res.ErrorCode, res.Description}
+	if e := parseResponseError(res, err); e != nil {
+		return nil, e
 	}
 
 	return castMessage(res.Result), nil

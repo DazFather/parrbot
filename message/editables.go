@@ -81,14 +81,7 @@ func delete(e editable) error {
 	}
 
 	// Deleting message and clearing response
-	res, err := api.DeleteMessage(message.Chat.ID, message.ID)
-	if err != nil {
-		return ResponseError{"Echotron", 1, err.Error()}
-	}
-	if !res.Ok {
-		return ResponseError{"Telegram", res.ErrorCode, res.Description}
-	}
-	return nil
+	return parseResponseError(api.DeleteMessage(message.Chat.ID, message.ID))
 }
 
 /* --- Implementing UpdateMessage --- */

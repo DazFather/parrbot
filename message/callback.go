@@ -17,17 +17,9 @@ type CallbackQuery struct {
 	GameShortName   string         `json:"game_short_name,omitempty"`
 }
 
-func (callback *CallbackQuery) Answer(opts *echotron.CallbackQueryOptions) (resonse bool, err error) {
-	res, e := api.AnswerCallbackQuery(callback.ID, opts)
-	resonse = res.Result
-	switch {
-	case e != nil:
-		err = ResponseError{"Echotron", 1, err.Error()}
-	case !res.Ok:
-		err = ResponseError{"Telegram", res.ErrorCode, res.Description}
-	}
 
-	return
+func (callback CallbackQuery) Answer(opts *echotron.CallbackQueryOptions) error {
+	return parseResponseError(api.AnswerCallbackQuery(callback.ID, opts))
 }
 
 // EditText is a method that allows to edit the text (and others options)
