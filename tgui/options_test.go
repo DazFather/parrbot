@@ -85,3 +85,17 @@ func ExampleToMessageOptions() {
 	fmt.Println(editOpt.ParseMode, opt.ParseMode)                         // HTML HTML
 	fmt.Println(editOpt.DisableWebPagePreview, opt.DisableWebPagePreview) // true, true
 }
+
+func ExampleNewAlert() {
+	var alert *echotron.CallbackQueryOptions = tgui.NewAlert("Hello World!", 69)
+
+	fmt.Println(alert.Text, alert.CacheTime, alert.ShowAlert)
+	// Output: Hello World! 69 true
+}
+
+func ExampleNewToast() {
+	var alert *echotron.CallbackQueryOptions = tgui.NewToast("Hello World!", 69)
+
+	fmt.Println(alert.Text, alert.CacheTime, alert.ShowAlert)
+	// Output: Hello World! 69 false
+}

@@ -8,12 +8,6 @@ import (
 	"github.com/NicoNex/echotron/v3"
 )
 
-// Text message type
-type Text struct {
-	Text string
-	Opts *echotron.MessageOptions
-}
-
 func ExampleClipKeyboard() {
 	var msg = message.Text{"Hello World", nil}
 

@@ -166,12 +166,12 @@ func FilterEntityByType(allowedTypes ...echotron.MessageEntityType) EntityFilter
 	}
 }
 
-// StirngToUft16 encode a given string into Utf16 format
+// stirngToUft16 encode a given string into Utf16 format
 func stirngToUft16(toEncode string) []uint16 {
 	return utf16.Encode([]rune(toEncode))
 }
 
-// Uft16ToStirng decode a given encoded text in Utf16 format into a string
+// uft16ToStirng decode a given encoded text in Utf16 format into a string
 func uft16ToStirng(encodedText []uint16) string {
 	return string(utf16.Decode(encodedText))
 }

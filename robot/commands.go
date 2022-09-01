@@ -69,29 +69,30 @@ func divide(commandList []Command) (splitted map[message.UpdateType]map[string]C
 // probably, there is no need to use this function
 func Select(update *message.Update) CommandFunc {
 	var (
+		rgx     = regexp.MustCompile(`^/\w+`)
 		trigger string
 		filter  message.UpdateType
 	)
 
 	switch true {
 	case update.Message != nil:
-		trigger = extractTrigger(update.Message.Text)
+		trigger = rgx.FindString(update.Message.Text)
 		filter = message.MESSAGE
 	case update.EditedMessage != nil:
-		trigger = extractTrigger(update.EditedMessage.Text)
+		trigger = rgx.FindString(update.EditedMessage.Text)
 		filter = message.EDITED_MESSAGE
 	case update.ChannelPost != nil:
-		trigger = extractTrigger(update.ChannelPost.Text)
+		trigger = rgx.FindString(update.ChannelPost.Text)
 		filter = message.CHANNEL_POST
 	case update.EditedChannelPost != nil:
-		trigger = extractTrigger(update.EditedChannelPost.Text)
+		trigger = rgx.FindString(update.EditedChannelPost.Text)
 		filter = message.EDITED_CHANNEL_POST
 	case update.InlineQuery != nil:
 		filter = message.INLINE_QUERY
 	case update.ChosenInlineResult != nil:
 		filter = message.CHOSEN_INLINE_RESULT
 	case update.CallbackQuery != nil:
-		trigger = extractTrigger(update.CallbackQuery.Data)
+		trigger = rgx.FindString(update.CallbackQuery.Data)
 		filter = message.CALLBACK_QUERY
 	case update.ShippingQuery != nil:
 		filter = message.SHIPPING_QUERY
@@ -106,12 +107,6 @@ func Select(update *message.Update) CommandFunc {
 	}
 
 	return commands[filter][trigger]
-}
-
-// extractTrigger is in charge of extracting the trigger from a caption originated by the update
-func extractTrigger(caption string) string {
-	var rgxp = regexp.MustCompile(`^/\w+`)
-	return rgxp.FindString(caption)
 }
 
 // LoadCommands saves the given commandList in a form that is more efficenct for
