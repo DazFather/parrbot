@@ -6,8 +6,8 @@ This package contains core functionality for interacting with Telegram, managing
 An `Update` is represent any input received. Normally only one of the field (not including the ID) will be populated with the infos received from Telegram.
 An `UpdateType` indicates what field is being populated ans is used on the _robot_ package to specify to what update a command needs to reply on, in this context you can also use the sum operator '+' or the bitwise or operator '|' to include multiple types
 
-### Managing message
-**Incoming** and **sent** messages are represented as `UpdateMessage` witch are very similar to the Telegram representation but present some wrappers like _Forward_, _Media_ and _SystemNotification_ that holds a specific group of informations.
+### Managing messages
+**Incoming** and **sent** messages are represented as `UpdateMessage` wich are very similar to the Telegram representation but present some wrappers like _Forward_, _Media_ and _SystemNotification_ that holds a specific group of informations.
 Due to Telegram's limitation is only possible to edit a message sent by the bot itself (except for messages published in channels), but is still possible to delete
 any type of messages (sent in the last 24h). When editing a message, the edit will be synchronized, this means that if returned error is nil, the variable that is being used to edit a message will change accordingly.
 There is also the possibility to create a **reference** of the sent message thanks to the `NewReference` function. This struct is way lighter and is capable of both editing and deleting the associated message without the sync capability.
