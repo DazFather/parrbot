@@ -40,9 +40,9 @@ _...and more are coming_
 ## Documentation
 
 [Here](https://pkg.go.dev/github.com/DazFather/parrbot) there is the official documentation of parrbot. As you will see is divided in 3 main packages / directories:
- - message - (Core) manage incoming / outgoing message-related stuffs
- - robot - (Core) manage bots sessions and commands
- - tgui - toolkit for user interfaces like menus or keyboards utilities
+ - [message](https://pkg.go.dev/github.com/DazFather/parrbot/message) - (Core) manage incoming / outgoing message-related stuffs
+ - [robot](https://pkg.go.dev/github.com/DazFather/parrbot/robot) - (Core) manage bots sessions and commands
+ - [tgui](https://pkg.go.dev/github.com/DazFather/parrbot/tgui) - toolkit for user interfaces like menus or keyboards utilities
 
 Parr(B)ot makes massively use of the [echotron library](https://pkg.go.dev/github.com/NicoNex/echotron/v3), it might be useful also it's doc. Keep in mind that the echotron library is almost 1:1 with the Telegram's Bot API, if you are unsure about the meaning of certain fields you can always have a look to the [Telegram's doc](https://core.telegram.org/bots/api).
 

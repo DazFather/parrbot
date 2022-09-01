@@ -64,7 +64,9 @@ func divide(commandList []Command) (splitted map[message.UpdateType]map[string]C
 	return
 }
 
-// Select take an update and verify it's type and then trigger in order to return the appropriate function (or nil)
+// Select take an update and verify it's type and then trigger in order to return
+// the appropriate function (or nil). If robot.Start is used (as racommanded),
+// probably, there is no need to use this function
 func Select(update *message.Update) CommandFunc {
 	var (
 		trigger string
@@ -112,7 +114,10 @@ func extractTrigger(caption string) string {
 	return rgxp.FindString(caption)
 }
 
-// LoadCommands saves the given commandList in a form that is more efficenct
+// LoadCommands saves the given commandList in a form that is more efficenct for
+// the bot to retrive. Use this function one time only, is necessary for Select
+// to work. If robot.Start is used (as racommanded), probably, there is no need
+// to use this function
 func LoadCommands(commandList []Command) {
 	commands = make(map[message.UpdateType]map[string]CommandFunc, 0)
 	commands = divide(commandList)
