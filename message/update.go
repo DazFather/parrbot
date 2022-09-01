@@ -65,27 +65,6 @@ type ForwardInfo struct {
 	Automatic  bool           `json:"is_automatic_forward_date,omitempty"`
 }
 
-// MediaInfo countain all the infos about medias, Polls and so on contained into a message
-type MediaInfo struct {
-	MediaGroupID    string                    `json:"media_group_id,omitempty"`
-	Animation       *echotron.Animation       `json:"animation,omitempty"`
-	Audio           *echotron.Audio           `json:"audio,omitempty"`
-	Document        *echotron.Document        `json:"document,omitempty"`
-	Photo           []*echotron.PhotoSize     `json:"photo,omitempty"`
-	Sticker         *echotron.Sticker         `json:"sticker,omitempty"`
-	Video           *echotron.Video           `json:"video,omitempty"`
-	VideoNote       *echotron.VideoNote       `json:"video_note,omitempty"`
-	Voice           *echotron.Voice           `json:"voice,omitempty"`
-	Caption         string                    `json:"caption,omitempty"`
-	CaptionEntities []*echotron.MessageEntity `json:"caption_entities,omitempty"`
-	Contact         *echotron.Contact         `json:"contact,omitempty"`
-	Dice            *echotron.Dice            `json:"dice,omitempty"`
-	Game            *echotron.Game            `json:"game,omitempty"`
-	Poll            *echotron.Poll            `json:"poll,omitempty"`
-	Venue           *echotron.Venue           `json:"venue,omitempty"`
-	Location        *echotron.Location        `json:"location,omitempty"`
-}
-
 // SystemNotificationInfo countain the infos of Telegram's generated message on particular events (part of UpdateMessage)
 type SystemNotificationInfo struct {
 	NewChatMembers                []*echotron.User                        `json:"new_chat_members,omitempty"`
