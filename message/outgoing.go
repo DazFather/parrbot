@@ -17,7 +17,7 @@ func LoadAPI(token string) {
 	api = echotron.NewAPI(token)
 }
 
-// API return the current api, usefull for compatibility with not yet supported
+// API return the current api, useful for compatibility with not yet supported
 // echotron functions calls
 func API() echotron.API {
 	return api
