@@ -35,7 +35,7 @@ func (err ResponseError) Error() string {
 	return fmt.Sprint("[", err.ErrorCode, "] ", err.From, ": ", err.Description)
 }
 
-func parseResponseError(res echotron.APIResponse, err error) *ResponseError {
+func parseResponseError(res echotron.APIResponse, err error) error {
 	if err != nil {
 		return &ResponseError{"Echotron", 1, err.Error()}
 	}
